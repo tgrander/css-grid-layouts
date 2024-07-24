@@ -1,0 +1,163 @@
+---
+import { getRandomTimestamp } from "@utils/getRandomTimestamp";
+import BaseHead from "../components/BaseHead.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
+
+interface InboxMessage {
+  id: number;
+  emoji: string;
+  name: string;
+  text: string;
+  timestamp: string;
+}
+
+interface Message {
+  id: number;
+  senderId: number;
+  text: string;
+  timestamp: string;
+}
+
+const emojis = [
+  { emoji: "🐊", name: "Crocodile" },
+  { emoji: "🐷", name: "Pig" },
+  { emoji: "🐯", name: "Tiger" },
+  { emoji: "🦑", name: "Squid" },
+  { emoji: "🐌", name: "Snail" },
+  { emoji: "🦈", name: "Shark" },
+  { emoji: "🐠", name: "Tropical Fish" },
+  { emoji: "🐸", name: "Frog" },
+  { emoji: "🐢", name: "Turtle" },
+  { emoji: "🐼", name: "Panda" },
+  { emoji: "🐨", name: "Koala" },
+  { emoji: "🦄", name: "Unicorn" },
+  { emoji: "🐳", name: "Whale" },
+  { emoji: "🐧", name: "Penguin" },
+  { emoji: "🐙", name: "Octopus" },
+  { emoji: "🐞", name: "Ladybug" },
+  { emoji: "🦁", name: "Lion" },
+  { emoji: "🐵", name: "Monkey" },
+  { emoji: "🦎", name: "Lizard" },
+  { emoji: "🐬", name: "Dolphin" },
+  { emoji: "🐹", name: "Hamster" },
+  { emoji: "🐻", name: "Bear" },
+  { emoji: "🐶", name: "Dog" },
+  { emoji: "🦋", name: "Butterfly" },
+  { emoji: "🦊", name: "Fox" },
+  { emoji: "🐮", name: "Cow" },
+  { emoji: "🐺", name: "Wolf" },
+  { emoji: "🐔", name: "Chicken" },
+  { emoji: "🦕", name: "Sauropod" },
+  { emoji: "🐝", name: "Bee" },
+  { emoji: "🐰", name: "Rabbit" },
+  { emoji: "🐋", name: "Whale" },
+  { emoji: "🐍", name: "Snake" },
+];
+
+const messages: Message[] = [
+  {
+    id: 1,
+    senderId: 1,
+    text: "Do you have time to review my pull request?",
+    timestamp: "2023-07-19T11:00:00Z",
+  },
+  {
+    id: 2,
+    senderId: 0,
+    text: "Sure, I can take a look in about an hour. Is that okay?",
+    timestamp: "2023-07-19T11:05:00Z",
+  },
+  {
+    id: 3,
+    senderId: 1,
+    text: "Perfect, thanks!",
+    timestamp: "2023-07-19T11:07:00Z",
+  },
+];
+
+const inbox: InboxMessage[] = emojis
+  .map((emoji, index) => ({
+    id: index + 1,
+    emoji: emoji.emoji,
+    name: emoji.name,
+    text: Array(10).fill(emoji.name).join(" "),
+    timestamp: getRandomTimestamp().toISOString(),
+  }))
+  .sort((a, b) => (a.timestamp > b.timestamp ? 1 : (1 ?? 0)));
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <h1>💬 Chat App</h1>
+      <section class="chat__wrapper">
+        <header class="chat__header"></header>
+        <aside class="chat__sidebar">
+          {
+            inbox.map((message) => (
+              <div class="chat__inbox-message">
+                <div class="img" />
+                <div class="chat__inbox-message-data">
+                  <p>{message.name}</p>
+                  <p>{message.text}</p>
+                </div>
+              </div>
+            ))
+          }
+        </aside>
+        <section class="chat__message-detail">
+          {
+            messages.map((message) => (
+              <div class="chat__message">
+                <p class="chat__message-text">{message.text}</p>
+                <span class="chat__message-timestamp">{message.timestamp}</span>
+              </div>
+            ))
+          }
+        </section>
+      </section>
+    </main>
+    <Footer />
+  </body><style>
+    :root {
+      --desktop: 768px;
+    }
+    html,
+    body {
+      height: 100dvh;
+    }
+    body {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+    main {
+      height: 100%;
+      container: app / ininline-size;
+    }
+
+    .chat__wrapper {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-template-areas:
+        "header"
+        "sidebar message-detail";
+
+      @container app (min-width: calc(var(---desktop) - 1px)) {
+        grid-template-areas:
+          "header header"
+          "sidebar message-detail";
+      }
+    }
+
+    .chat__inbox-message {
+      display: flex;
+    }
+  </style>
+</html>
