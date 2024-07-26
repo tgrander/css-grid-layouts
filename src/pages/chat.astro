@@ -125,9 +125,10 @@ const inbox: InboxMessage[] = emojis
       </section>
     </main>
     <Footer />
-  </body><style>
+  </body><!-- Styles -->
+  <style>
     :root {
-      --desktop: 768px;
+      --desktop: 700px;
     }
     html,
     body {
@@ -137,23 +138,39 @@ const inbox: InboxMessage[] = emojis
       display: grid;
       grid-template-rows: auto 1fr auto;
     }
-    main {
-      height: 100%;
-      container: app / ininline-size;
+    .chat-container {
+      container-type: inline-size;
+      container-name: app;
     }
 
     .chat__wrapper {
       display: grid;
       grid-template-columns: auto 1fr;
+      grid-template-rows: auto 1fr;
       grid-template-areas:
-        "header"
+        "header header"
         "sidebar message-detail";
+      max-height: 800px;
 
-      @container app (min-width: calc(var(---desktop) - 1px)) {
+      /* Layout for desktop */
+      @container app (width > calc(var(--desktop) - 1px)) {
         grid-template-areas:
           "header header"
           "sidebar message-detail";
+        grid-template-columns: auto 1fr;
       }
+    }
+
+    .chat__header {
+      grid-area: header;
+
+      height: 80px;
+    }
+    .chat__sidebar {
+      grid-area: sidebar;
+    }
+    .chat__message-detail {
+      grid-area: message-detail;
     }
 
     .chat__inbox-message {
