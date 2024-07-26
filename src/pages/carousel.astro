@@ -1,0 +1,153 @@
+---
+import { ChevronLeft, ChevronRight, Pause } from "lucide-astro";
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
+---
+
+<html lang="en">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    <style>
+      :root {
+        --foreground: hsl(201, 0%, 0%);
+        --muted: hsl(201, 0%, 20%);
+        --button-bg: hsl(201, 0%, 20%);
+        --progress-dots-padding: 0.5rem 0.75rem;
+      }
+      .carousel-container {
+        position: relative;
+        overflow: hidden;
+        /* width: 100%; */
+        max-width: 600px;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .carousel-images {
+        display: flex;
+      }
+      .carousel-images img {
+        width: 100%;
+        flex-shrink: 0;
+        object-fit: cover;
+      }
+
+      .carousel-navigation-controls {
+        display: flex;
+        border-radius: 50%;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+      }
+
+      .progress-dots-container {
+        display: flex;
+        border-radius: 2rem;
+        justify-content: center;
+        align-items: center;
+        gap: 0.75rem;
+        background-color: var(--foreground);
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        padding-right: 1rem;
+        padding-left: 0.5rem;
+      }
+      .progress-dots-container button.pause-play-button {
+        border: none;
+        box-shadow: none;
+        background: none;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0.25rem;
+      }
+      .progress-dots-container button.pause-play-button:hover {
+        background: var(--muted);
+      }
+      .progress-dots-container button.pause-play-button svg {
+        fill: white;
+        stroke: white;
+        stroke-width: 1px;
+      }
+
+      .progress-dots {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      .progress-dots button {
+        width: 1rem;
+        height: 1rem;
+        aspect-ratio: 1;
+        background: gray;
+        border: none;
+        border-radius: 50%;
+      }
+      .progress-dots button.active {
+        background-color: white;
+      }
+
+      .navigation-buttons {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .navigation-buttons button {
+        border: none;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <Header />
+
+    <main>
+      <h2>🖼️ Image Carousel</h2>
+
+      <div class="carousel-container">
+        <div class="carousel-images">
+          <img class="carousel-image" src="/images/carousel/a.jpg" alt="..." />
+          <!-- <img class="carousel-image" src="..." alt="..." /> -->
+          <!-- <img class="carousel-image" src="..." alt="..." /> -->
+        </div>
+
+        <div class="carousel-navigation-controls">
+          <div class="progress-dots-container">
+            <button class="pause-play-button">
+              <Pause />
+            </button>
+
+            <div class="progress-dots">
+              {
+                Array.from({ length: 5 }).map((_, index) => (
+                  <button
+                    class={`${index === 0 ? "active" : ""}`}
+                    data-dot-index={index}
+                  />
+                ))
+              }
+            </div>
+          </div>
+
+          <div class="navigation-buttons">
+            <button class="previous">
+              <ChevronLeft />
+            </button>
+            <button class="next">
+              <ChevronRight />
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
