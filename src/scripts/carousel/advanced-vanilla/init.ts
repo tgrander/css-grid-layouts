@@ -20,4 +20,4 @@ const images: CarouselImage[] = imageUrls.map((url, index) => ({
 }));
 
 // Init Carousel
-new ImageCarousel(container, { images });
+new ImageCarousel(container, { images, autoplay: true });

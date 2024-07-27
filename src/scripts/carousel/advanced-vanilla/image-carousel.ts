@@ -2,7 +2,18 @@ import { debounce } from "@utils/debounce";
 
 /**
     Event Listeners:
-        x ON CLICK PAUSE/PLAY (do after everything else is implemented)
+        ON CLICK PAUSE/PLAY (do after everything else is implemented)
+
+    To Do: 
+        AUTOPLAY
+        START/STOP AUTOPLAY
+          - click autoplay button
+          - mouse enters/leaves carousel
+          - touch carousel (mobile event)
+
+        KEYBOARD NAVIGATION
+          - pressing left arrow key goes to next slide
+          - pressing right arrow key goes to prev slide
  */
 
 export interface CarouselImage {
@@ -13,7 +24,7 @@ export interface CarouselImage {
 export interface CarouselOptions {
   images: CarouselImage[];
   autoplay?: boolean;
-  autoplayTimer?: number;
+  autoplayDelay?: number;
   loop?: boolean;
   showButtons?: boolean;
 }
@@ -30,12 +41,14 @@ export class ImageCarousel {
   private currentIndex = 0;
   private isAutoPlaying: boolean = false;
   private slideWidth: number = 0;
+  private intervalProgress: number = 0;
+  private autoPlayTimer: number | null = null;
 
   constructor(container: HTMLElement, options: CarouselOptions) {
     this.container = container;
     this.options = {
       autoplay: false,
-      autoplayTimer: 2000,
+      autoplayDelay: 2000,
       loop: true,
       showButtons: true,
       ...options,
@@ -59,6 +72,7 @@ export class ImageCarousel {
     this.setupEventListeners();
     this.updateButtonsVisibility();
     this.updateSlideWidth();
+    this.startAutoPlay();
 
     window.addEventListener(
       "resize",
@@ -196,5 +210,21 @@ export class ImageCarousel {
         ? 0
         : Math.min(this.slides.length - 1, this.currentIndex + 1);
     this.goToSlide(newIndex);
+  }
+
+  private startAutoPlay() {
+    if (this.options.autoplay && !this.autoPlayTimer) {
+      this.autoPlayTimer = window.setInterval(
+        () => this.next(),
+        this.options.autoplayDelay
+      );
+    }
+  }
+
+  private stopAutoPlay() {
+    if (this.autoPlayTimer) {
+      window.clearInterval(this.autoPlayTimer);
+      this.autoPlayTimer = null;
+    }
   }
 }
