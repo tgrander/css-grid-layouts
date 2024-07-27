@@ -77,6 +77,12 @@
         display: flex;
         gap: 0.5rem;
       }
+
+      .navigation-buttons > .carousel-button svg {
+        width: 24px;
+        height: 24px;
+      }
+
       .indicator-buttons {
         display: flex;
         gap: 1rem;
@@ -134,11 +140,28 @@
           <div class="dots-container"></div>
         </div>
         <div class="navigation-buttons">
-          <button class="carousel-button prev">Previous</button>
-          <button class="carousel-button next">Next</button>
+          <button class="carousel-button prev">
+            <svg>
+              <use href="#chevron-left"></use>
+            </svg>
+          </button>
+          <button class="carousel-button next">
+            <svg>
+              <use href="#chevron-right"></use>
+            </svg>
+          </button>
         </div>
       </div>
     </div>
+
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+      <symbol id="chevron-left" viewBox="0 0 24 24">
+        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
+      </symbol>
+      <symbol id="chevron-right" viewBox="0 0 24 24">
+        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
+      </symbol>
+    </svg>
   </body>
 
   <script src="../../scripts/carousel/interview/init.ts"></script>
