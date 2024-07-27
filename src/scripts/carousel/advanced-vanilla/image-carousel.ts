@@ -1,12 +1,11 @@
 /**
  * Initialize the dynamic parts of the HTML:
- *  CAROUSEL SLIDE IMAGES
-        - For each image provided to component as config, create and render:
-            <li class="carousel__slide">
-                <img src="/public/images/carousel/trey.jpg" />
-            </li>
 
     EVENT LISTENERS
+        - ON CLICK PREV
+        - ON CLICK NEXT
+        - ON CLICK DOT
+        x ON CLICK PAUSE/PLAY (do after everything else is implemented)
 
     DOTS
 
@@ -18,29 +17,30 @@ export interface CarouselImage {
   alt?: string;
 }
 
-export interface CarouselConfig {
+export interface CarouselOptions {
   images: CarouselImage[];
 }
 
 export class ImageCarousel {
-  private images: CarouselImage[];
   private container: HTMLElement;
-  private track!: HTMLElement;
-  private slides!: HTMLElement[];
+  private track: HTMLElement;
+  private slides: HTMLElement[] = [];
+  private dots: HTMLElement[] = [];
+  private options: Required<CarouselOptions>;
 
-  constructor(container: HTMLElement, { images }: CarouselConfig) {
+  constructor(container: HTMLElement, options: CarouselOptions) {
     this.container = container;
-    this.images = images;
-
-    this.initImageSlides();
-  }
-
-  private initImageSlides() {
+    this.options = options;
     this.track = this.container.querySelector(
       ".carousel__track"
     ) as HTMLElement;
 
-    this.images.forEach((image, index) => {
+    this.createSlides();
+    this.createDots();
+  }
+
+  private createSlides() {
+    this.options.images.forEach((image, index) => {
       const li = document.createElement("li");
       li.className = "carousel__slide";
 
@@ -53,5 +53,19 @@ export class ImageCarousel {
     });
 
     this.slides = Array.from(this.track.children) as HTMLElement[];
+  }
+
+  private createDots() {
+    // <button class="carousel__dot current"></button>
+    const dotsContainer = this.container.querySelector(
+      ".carousel__dots"
+    ) as HTMLElement;
+
+    this.options.images.forEach((image, index) => {
+      const dot = document.createElement("button");
+      dot.classList.add("carousel__dot");
+      dotsContainer.appendChild(dot);
+      this.dots.push(dot);
+    });
   }
 }
