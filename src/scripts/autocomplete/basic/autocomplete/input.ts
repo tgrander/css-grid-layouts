@@ -1,7 +1,12 @@
+import type { EventEmitter } from "@lib/event-emitter";
+
 export interface InputOptions {
+  eventEmitter: EventEmitter;
+
   placeholder?: string;
   defaultValue?: string;
   class?: string | null;
+
   onChange?: (e: Event) => void;
   onFocus?: (e: Event) => void;
   onBlur?: (e: Event) => void;

@@ -1,3 +1,4 @@
+import type { EventEmitter } from "@lib/event-emitter";
 import type { SuggestionItem } from "../types";
 
 export type DataSourceFunction<T extends SuggestionItem> = (
@@ -6,6 +7,7 @@ export type DataSourceFunction<T extends SuggestionItem> = (
 
 export interface DataProviderOptions<T extends SuggestionItem> {
   dataSource: DataSourceFunction<T>;
+  eventEmitter: EventEmitter;
   debounceTime?: number | null;
 }
 

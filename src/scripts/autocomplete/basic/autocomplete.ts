@@ -9,6 +9,7 @@ import {
   AutoCompleteSuggestionsManager,
 } from "./autocomplete/index";
 
+import { EventEmitter } from "@lib/event-emitter";
 import type { SuggestionItem } from "./types";
 
 interface AutoCompleteOptions<T extends SuggestionItem> {
@@ -26,9 +27,13 @@ class AutoComplete<T extends SuggestionItem> {
 
   constructor(container: HTMLElement, options: AutoCompleteOptions<T>) {
     this.container = container;
+
+    // Event Emitter
+    const eventEmitter = new EventEmitter();
+    // Options
     this.options = {
-      input: {},
-      suggestions: {},
+      input: { eventEmitter },
+      suggestions: { eventEmitter },
       ...options,
     };
 
@@ -52,7 +57,10 @@ class AutoComplete<T extends SuggestionItem> {
       this.options.suggestions
     );
     // Data source
-    this.dataProvider = new AutoCompleteDataProvider<T>(this.options.data);
+    this.dataProvider = new AutoCompleteDataProvider<T>({
+      ...this.options.data,
+      eventEmitter,
+    });
   }
 }
 

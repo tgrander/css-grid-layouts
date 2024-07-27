@@ -1,8 +1,12 @@
+import type { EventEmitter } from "@lib/event-emitter";
 import type { SuggestionItem } from "../types";
 
 export interface SuggestionsOptions<T extends SuggestionItem> {
+  eventEmitter: EventEmitter;
+
   defaultItems?: T[];
   renderItem?: (item: T) => string;
+
   onSelect?: (item: T) => void;
   onOpen?: () => void;
   onClose?: () => void;
