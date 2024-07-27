@@ -10,6 +10,7 @@ import {
 } from "./autocomplete/index";
 
 import { EventEmitter } from "@lib/event-emitter";
+import { AutoCompleteEventType } from "@scripts/autocomplete/events";
 import type { SuggestionItem } from "./types";
 
 interface AutoCompleteOptions<T extends SuggestionItem> {
@@ -65,6 +66,20 @@ class AutoComplete<T extends SuggestionItem> {
     this.dataProvider = new AutoCompleteDataProvider<T>(
       this.options.data,
       this.eventEmitter
+    );
+
+    // Event Listeners
+    this.setupEventListeners();
+  }
+
+  private setupEventListeners() {
+    // Open suggestions popover on input focus
+    this.eventEmitter.on(AutoCompleteEventType.InputFocus, () => {
+      this.suggestionsManager.open();
+    });
+    // Close it on input blue
+    this.eventEmitter.on(AutoCompleteEventType.InputBlur, () =>
+      this.suggestionsManager.close()
     );
   }
 }

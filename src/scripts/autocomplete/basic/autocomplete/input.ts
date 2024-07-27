@@ -1,4 +1,5 @@
 import type { EventEmitter } from "@lib/event-emitter";
+import { AutoCompleteEventType } from "@scripts/autocomplete/events";
 
 export interface InputOptions {
   placeholder?: string;
@@ -66,10 +67,12 @@ export class AutoCompleteInputManager {
   }
 
   private handleOnFocus(event: Event) {
+    this.eventEmitter.emit(AutoCompleteEventType.InputFocus);
     this.options.onFocus(event);
   }
 
   private handleOnBlur(event: Event) {
+    this.eventEmitter.emit(AutoCompleteEventType.InputBlur);
     this.options.onBlur(event);
   }
 }

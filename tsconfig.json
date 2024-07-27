@@ -9,6 +9,7 @@
       "@utils/*": ["src/utils/*"],
       "@styles/*": ["src/styles/*"],
       "@data/*": ["src/data/*"],
+      "@scripts/*": ["src/scripts/*"],
       "@lib/*": ["src/lib/*"]
     }
   }
