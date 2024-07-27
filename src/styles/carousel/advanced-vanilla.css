@@ -11,4 +11,31 @@ main#app {
 }
 .carousel {
   grid-area: carousel;
+  height: 600px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.carousel__track-container {
+  height: 100%;
+}
+
+.carousel__track {
+  position: relative;
+  display: flex;
+  height: 100%;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.carousel__slide {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+.carousel__slide img {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
 }
