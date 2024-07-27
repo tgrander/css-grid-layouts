@@ -128,6 +128,13 @@ export class ImageCarousel {
   private setupEventListeners() {
     this.prevButton.addEventListener("click", () => this.prev());
     this.nextButton.addEventListener("click", () => this.next());
+    this.container.addEventListener("mouseenter", this.stopAutoPlay.bind(this));
+    this.container.addEventListener(
+      "mouseleave",
+      this.startAutoPlay.bind(this)
+    );
+    this.container.addEventListener("touchstart", this.stopAutoPlay.bind(this));
+    this.container.addEventListener("touchend", this.startAutoPlay.bind(this));
   }
 
   private setSlidePosition() {
