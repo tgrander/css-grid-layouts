@@ -49,19 +49,70 @@ import BaseHead from "@components/BaseHead.astro";
     <header>
       <h3>🔍 Basic Autocomplete</h3>
     </header>
+
     <main class="autocomplete__container">
       <div class="autocomplete__search-input-container">
-        <input class="autocomplete__search-input" />
+        <input
+          class="autocomplete__search-input"
+          role="combobox"
+          aria-autocomplete="list"
+          aria-label="Autocomplete search input"
+          aria-expanded="false"
+          aria-owns="autocomplete__suggestions-list"
+          aria-activedescendant=""
+        />
       </div>
+
       <div class="autocomplete__popover">
         <div class="autocomplete__suggestions-container">
-          <ul class="autocomplete__suggestions">
-            <li class="autocomplete__suggestion-item">Banana</li>
-            <li class="autocomplete__suggestion-item">Orange</li>
-            <li class="autocomplete__suggestion-item">Apple</li>
-            <li class="autocomplete__suggestion-item">Mango</li>
-            <li class="autocomplete__suggestion-item">Kiwi</li>
-            <li class="autocomplete__suggestion-item">Pineapple</li>
+          <ul
+            class="autocomplete__suggestions"
+            id="autocomplete__suggestions-list"
+            role="listbox"
+          >
+            <li id="item-1" class="autocomplete__suggestion-item" role="option">
+              Banana
+            </li>
+            <li
+              id="item-2"
+              class="autocomplete__suggestion-item"
+              role="option"
+              aria-selected="false"
+            >
+              Orange
+            </li>
+            <li
+              id="item-3"
+              class="autocomplete__suggestion-item"
+              role="option"
+              aria-selected="false"
+            >
+              Apple
+            </li>
+            <li
+              id="item-4"
+              class="autocomplete__suggestion-item"
+              role="option"
+              aria-selected="false"
+            >
+              Mango
+            </li>
+            <li
+              id="item-5"
+              class="autocomplete__suggestion-item"
+              role="option"
+              aria-selected="false"
+            >
+              Kiwi
+            </li>
+            <li
+              id="item-6"
+              class="autocomplete__suggestion-item"
+              role="option"
+              aria-selected="false"
+            >
+              Pineapple
+            </li>
           </ul>
         </div>
       </div>
