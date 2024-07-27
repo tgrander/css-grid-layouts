@@ -1,5 +1,6 @@
 import type { ProduceItem } from "@data/produce";
 import produceItems from "@data/produce";
+import html from "noop-tag";
 import AutoComplete from "./autocomplete";
 
 // Container Element
@@ -30,5 +31,15 @@ const autocomplete = new AutoComplete<ProduceItem>(container, {
   },
   suggestions: {
     defaultItems: produceItems,
+    renderItem: (item) =>
+      html`
+        <div class="produce-item__container">
+          <div class="produce-item__image text-with-glow">${item.emoji}</div>
+          <div class="produce-item__data">
+            <p class="produce-item__name">${item.name}</p>
+            <p class="produce-item__category">${item.category}</p>
+          </div>
+        </div>
+      `,
   },
 });
