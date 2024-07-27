@@ -43,6 +43,10 @@ import BaseHead from "@components/BaseHead.astro";
         left: 0;
         right: 0;
       }
+
+      .hidden {
+        display: none;
+      }
     </style>
   </head>
   <body>
@@ -63,7 +67,7 @@ import BaseHead from "@components/BaseHead.astro";
         />
       </div>
 
-      <div class="autocomplete__popover">
+      <div class="autocomplete__popover hidden" aria-hidden="true">
         <div class="autocomplete__suggestions-container">
           <ul
             class="autocomplete__suggestions"
