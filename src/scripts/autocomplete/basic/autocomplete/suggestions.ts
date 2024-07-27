@@ -18,6 +18,7 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
   private currentSuggestions: T[] = [];
   private items: HTMLLIElement[] = [];
   private selectedItemIndex: number | null = null;
+  private focusedItemIndex: number = 0;
   private eventEmitter: EventEmitter;
 
   constructor(
@@ -67,7 +68,7 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
       this.items.push(li);
     });
 
-    // Recreate ul
+    // Create ul
     this.suggestionsContainer.innerHTML = "";
     const ul = document.createElement("ul");
     ul.classList.add("autocomplete__suggestions");
@@ -81,7 +82,14 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
     ul.appendChild(listItems);
     this.suggestionsContainer.appendChild(ul);
 
+    // Focus first item
+    this.updateFocusedItem();
+
     // Setup event listeners
+    this.setupEventListeners();
+  }
+
+  private setupEventListeners() {
     this.suggestionsContainer.removeEventListener(
       "click",
       this.handleClickItem.bind(this)
@@ -89,6 +97,16 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
     this.suggestionsContainer.addEventListener(
       "click",
       this.handleClickItem.bind(this)
+    );
+
+    // Add mouseover event listener
+    this.suggestionsContainer.removeEventListener(
+      "mouseover",
+      this.handleMouseOver.bind(this)
+    );
+    this.suggestionsContainer.addEventListener(
+      "mouseover",
+      this.handleMouseOver.bind(this)
     );
   }
 
@@ -106,6 +124,19 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
     }
   }
 
+  private handleMouseOver(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    const li = target.closest("li");
+
+    if (li && this.items.includes(li)) {
+      const index = this.items.indexOf(li);
+      if (index !== -1) {
+        this.focusedItemIndex = index;
+        this.updateFocusedItem();
+      }
+    }
+  }
+
   private selectItem(selectedIndex: number) {
     this.selectedItemIndex = selectedIndex;
 
@@ -115,6 +146,15 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
       item.classList.toggle(
         this.options.selectedItemClassName,
         index === selectedIndex
+      );
+    });
+  }
+
+  private updateFocusedItem() {
+    this.items.forEach((item, index) => {
+      item.classList.toggle(
+        "autocomplete__suggestion-item--focused",
+        index === this.focusedItemIndex
       );
     });
   }

@@ -37,6 +37,9 @@ body {
   position: relative;
 }
 .autocomplete__suggestions-container {
+  --container-radius: 1rem;
+  --container-padding: 0.5rem;
+
   position: absolute;
   top: 0;
   left: 0;
@@ -46,18 +49,25 @@ body {
   margin-top: 4px;
   background-color: #fff;
   border: 1px solid #e0e0e0;
-  border-radius: 1rem;
+  border-radius: var(--container-radius);
+  padding: var(--container-padding);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   max-height: 400px;
   overflow-y: auto;
-  padding: 1rem;
+}
+.autocomplete__suggestion-item {
+  cursor: pointer;
+  border-radius: calc(var(--container-radius) - var(--container-padding));
+  padding: 0.4rem;
+}
+.autocomplete__suggestion-item--focused {
+  background: #f4f4f5;
 }
 
 .produce-item__container {
   display: grid;
   grid-template-columns: auto 1fr;
   column-gap: 12px;
-  margin-bottom: 1rem;
 }
 .produce-item__image {
   place-self: center;
@@ -71,7 +81,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.2rem;
+  font-size: 1.12rem;
 
   background: linear-gradient(145deg, #ffe599, #ffc266);
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -107,19 +117,4 @@ body {
 /* UTILITY CLASSES */
 .show {
   opacity: 1;
-}
-
-/* Subtle text shadow */
-.text-with-shadow {
-  text-shadow: 1px 1px 2px rgba(150, 126, 0, 0.2);
-}
-
-/* Slightly more pronounced shadow */
-.text-with-deeper-shadow {
-  text-shadow: 1px 1px 3px rgba(120, 100, 0, 0.3);
-}
-
-/* Soft glow effect */
-.text-with-glow {
-  text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
 }

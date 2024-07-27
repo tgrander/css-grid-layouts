@@ -34,7 +34,7 @@ const autocomplete = new AutoComplete<ProduceItem>(container, {
     renderItem: (item) =>
       html`
         <div class="produce-item__container">
-          <div class="produce-item__image text-with-glow">${item.emoji}</div>
+          <div class="produce-item__image ">${item.emoji}</div>
           <div class="produce-item__data">
             <p class="produce-item__name">${item.name}</p>
             <p class="produce-item__category">${item.category}</p>
