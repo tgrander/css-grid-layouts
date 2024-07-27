@@ -2,7 +2,6 @@ import { debounce } from "@utils/debounce";
 
 /**
     Event Listeners:
-        - ON CLICK DOT
         x ON CLICK PAUSE/PLAY (do after everything else is implemented)
  */
 
@@ -74,6 +73,10 @@ export class ImageCarousel {
     this.options.images.forEach((image, index) => {
       const slide = document.createElement("li");
       slide.className = "carousel__slide";
+      slide.id = `slide${index + 1}`;
+      slide.role = "group";
+      slide.ariaRoleDescription = "slide";
+      slide.ariaLabel = `Slide ${index + 1} of ${this.options.images.length}`;
 
       const img = document.createElement("img");
       img.src = image.src;
@@ -83,6 +86,8 @@ export class ImageCarousel {
       this.track.appendChild(slide);
       this.slides.push(slide);
     });
+
+    this.updateActiveSlide();
   }
 
   private createDots() {
@@ -94,6 +99,10 @@ export class ImageCarousel {
     this.options.images.forEach((_, index) => {
       const dot = document.createElement("button");
       dot.classList.add("carousel__dot");
+      dot.role = "tab";
+      dot.setAttribute("aria-controls", `slide${index + 1}`);
+      dot.ariaLabel = `Slide ${index + 1}`;
+
       dotsContainer.appendChild(dot);
       this.dots.push(dot);
       dot.addEventListener("click", () => this.goToSlide(index));
@@ -137,9 +146,11 @@ export class ImageCarousel {
   }
 
   private updateActiveDot() {
-    this.dots.forEach((dot, index) =>
-      dot.classList.toggle("active", this.currentIndex === index)
-    );
+    this.dots.forEach((dot, index) => {
+      const isActive = this.currentIndex === index;
+      dot.classList.toggle("active", isActive);
+      dot.ariaSelected = isActive ? "true" : "false";
+    });
   }
 
   private goToSlide(index: number) {
@@ -155,8 +166,19 @@ export class ImageCarousel {
     this.track.style.transform = `translateX(-${
       index * 100
     }%)`; /* Update: translate track */
+    this.updateActiveSlide();
     this.updateActiveDot();
     this.updateButtonsVisibility();
+  }
+
+  private updateActiveSlide() {
+    this.slides.forEach((slide, index) => {
+      if (this.currentIndex === index) {
+        slide.ariaHidden = "false";
+      } else {
+        slide.ariaHidden = "true";
+      }
+    });
   }
 
   private prev() {

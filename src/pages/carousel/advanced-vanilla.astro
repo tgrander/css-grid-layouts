@@ -18,9 +18,10 @@ import { SITE_DESCRIPTION, SITE_TITLE } from "../../consts";
         <p>Advanced Vanilla JS Implementation</p>
       </div>
 
-      <div class="carousel">
+      <div class="carousel" aria-role="region" aria-label="Image Carousel">
         <div class="carousel__track-container">
-          <ul class="carousel__track"></ul>
+          <ul class="carousel__track" aria-live="polite" aria-atomic="true">
+          </ul>
         </div>
 
         <div class="carousel__actions-container">
@@ -29,14 +30,27 @@ import { SITE_DESCRIPTION, SITE_TITLE } from "../../consts";
               <Pause />
             </button>
 
-            <div class="carousel__dots"></div>
+            <div
+              class="carousel__dots"
+              role="tablist"
+              aria-label="Slide indicators"
+            >
+            </div>
           </div>
 
           <div class="carousel__buttons">
-            <button class="carousel__button carousel__button--left">
+            <button
+              class="carousel__button carousel__button--left"
+              aria-controls="carousel"
+              aria-label="Prev slide"
+            >
               <ChevronLeft class="carousel__chevron carousel__chevron--left" />
             </button>
-            <button class="carousel__button carousel__button--right">
+            <button
+              class="carousel__button carousel__button--right"
+              aria-controls="carousel"
+              aria-label="Next slide"
+            >
               <ChevronRight
                 class="carousel__chevron carousel__chevron--right"
               />
