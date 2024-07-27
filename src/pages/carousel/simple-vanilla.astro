@@ -9,12 +9,27 @@ import { SITE_DESCRIPTION, SITE_TITLE } from "../../consts";
   <head>
     <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
     <style>
+      main#app {
+        display: grid;
+        grid-template-columns: 2rem auto 2rem;
+        grid-template-rows: auto 1fr;
+        row-gap: 1.25rem;
+        justify-items: center;
+        grid-template-areas:
+          ". heading ."
+          ". carousel .";
+      }
+
+      .heading {
+        grid-area: heading;
+      }
+
       .carousel {
         position: relative;
+        grid-area: carousel;
         height: 600px;
-        width: 80%;
-        /* max-width: 600px; */
-        margin: 0 auto;
+        width: 100%;
+        max-width: 600px;
       }
 
       .carousel__image {
@@ -88,8 +103,8 @@ import { SITE_DESCRIPTION, SITE_TITLE } from "../../consts";
   <body>
     <Header />
 
-    <main>
-      <h2>🖼️ Image Carousel</h2>
+    <main id="app">
+      <h3 class="heading">🖼️ Image Carousel: Simple Vanilla JS</h3>
 
       <div class="carousel">
         <button class="carousel__button carousel__button--left">
