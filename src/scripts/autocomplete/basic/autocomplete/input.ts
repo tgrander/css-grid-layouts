@@ -1,13 +1,9 @@
-import type { EventEmitter } from "@lib/event-emitter";
 import { AutoCompleteEventType } from "@scripts/autocomplete/events";
+import type { EventEmitter } from "@lib/event-emitter";
 
 export interface InputOptions {
   placeholder?: string;
-  defaultValue?: string;
-  class?: string | null;
-  onChange?: (e: Event) => void;
-  onFocus?: (e: Event) => void;
-  onBlur?: (e: Event) => void;
+  minChars?: number;
 }
 
 export class AutoCompleteInputManager {
@@ -21,34 +17,41 @@ export class AutoCompleteInputManager {
     eventEmitter: EventEmitter
   ) {
     this.input = container.closest("input") as HTMLInputElement;
-    if (!this.input) {
-      throw Error(
-        `Input element not found within container element: ${container}`
-      );
-    }
-
     this.eventEmitter = eventEmitter;
+    this.options = this.mergeDefaultOptions(options);
+    this.init();
+  }
 
-    this.options = {
+  private mergeDefaultOptions(options: InputOptions): Required<InputOptions> {
+    return {
       placeholder: "",
-      defaultValue: "",
-      class: null,
-      onChange: () => {},
-      onFocus: () => {},
-      onBlur: () => {},
+      minChars: 1,
       ...options,
     };
+  }
 
+  private init() {
     this.input.placeholder = this.options.placeholder;
-    this.input.value = this.options.defaultValue;
-
     this.setupEventListeners();
   }
 
   private setupEventListeners() {
-    this.input.addEventListener("input", this.handleInputChange.bind(this));
-    this.input.addEventListener("focus", this.handleOnFocus.bind(this));
-    this.input.addEventListener("blur", this.handleOnBlur.bind(this));
+    this.input.addEventListener("input", this.handleInput.bind(this));
+    this.input.addEventListener("focus", () =>
+      this.eventEmitter.emit(AutoCompleteEventType.InputFocus)
+    );
+    this.input.addEventListener("blur", () =>
+      this.eventEmitter.emit(AutoCompleteEventType.InputBlur)
+    );
+  }
+
+  private handleInput() {
+    const value = this.input.value.trim();
+    if (value.length > this.options.minChars) {
+      this.eventEmitter.emit(AutoCompleteEventType.InputChange, value);
+    } else {
+      this.eventEmitter.emit(AutoCompleteEventType.InputClear);
+    }
   }
 
   public getValue() {
@@ -57,22 +60,5 @@ export class AutoCompleteInputManager {
 
   public setValue(value: string) {
     this.input.value = value;
-  }
-
-  private handleInputChange(event: Event) {
-    const target = event.target as HTMLInputElement;
-
-    this.setValue(target.value);
-    this.options.onChange(event);
-  }
-
-  private handleOnFocus(event: Event) {
-    this.eventEmitter.emit(AutoCompleteEventType.InputFocus);
-    this.options.onFocus(event);
-  }
-
-  private handleOnBlur(event: Event) {
-    this.eventEmitter.emit(AutoCompleteEventType.InputBlur);
-    this.options.onBlur(event);
   }
 }
