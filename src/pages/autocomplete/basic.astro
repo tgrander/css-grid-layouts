@@ -1,0 +1,70 @@
+---
+import BaseHead from "@components/BaseHead.astro";
+---
+
+<html lang="en">
+  <head>
+    <BaseHead
+      title="Autocomplete | Basic"
+      description="Autocomplete UI component built with vanilla JS, HTML and CSS."
+    />
+
+    <style>
+      html,
+      body {
+        min-height: 100dvh;
+      }
+      body {
+        width: 90%;
+        margin-inline: auto;
+        /* display: grid; */
+      }
+      ul {
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+      }
+
+      .autocomplete__container {
+        width: 50%;
+      }
+      .autocomplete__search-input-container {
+        position: relative;
+      }
+      .autocomplete__search-input {
+        width: 100%;
+      }
+      .autocomplete__popover {
+        position: relative;
+      }
+      .autocomplete__suggestions-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h3>🔍 Basic Autocomplete</h3>
+    </header>
+    <main class="autocomplete__container">
+      <div class="autocomplete__search-input-container">
+        <input class="autocomplete__search-input" />
+      </div>
+      <div class="autocomplete__popover">
+        <div class="autocomplete__suggestions-container">
+          <ul class="autocomplete__suggestions">
+            <li class="autocomplete__suggestion-item">Banana</li>
+            <li class="autocomplete__suggestion-item">Orange</li>
+            <li class="autocomplete__suggestion-item">Apple</li>
+            <li class="autocomplete__suggestion-item">Mango</li>
+            <li class="autocomplete__suggestion-item">Kiwi</li>
+            <li class="autocomplete__suggestion-item">Pineapple</li>
+          </ul>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
