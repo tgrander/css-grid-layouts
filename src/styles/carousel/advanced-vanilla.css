@@ -29,6 +29,10 @@ main#app {
   width: 100%;
   max-width: 600px;
 }
+.carousel:focus {
+  outline: none;
+  box-shadow: none;
+}
 
 .carousel__track-container {
   position: relative;

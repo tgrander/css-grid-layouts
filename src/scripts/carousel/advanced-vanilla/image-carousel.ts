@@ -25,6 +25,7 @@ export interface CarouselOptions {
   autoplayDelay?: number;
   loop?: boolean;
   showButtons?: boolean;
+  autoFocus?: boolean;
 }
 
 export class ImageCarousel {
@@ -42,6 +43,7 @@ export class ImageCarousel {
   private slideWidth: number = 0;
   private intervalProgress: number = 0;
   private autoPlayTimer: number | null = null;
+  private isFocused: boolean = false;
 
   constructor(container: HTMLElement, options: CarouselOptions) {
     this.container = container;
@@ -50,6 +52,7 @@ export class ImageCarousel {
       autoplayDelay: 2000,
       loop: true,
       showButtons: true,
+      autoFocus: false,
       ...options,
     };
     this.track = this.container.querySelector(
@@ -76,6 +79,10 @@ export class ImageCarousel {
     this.updateSlideWidth();
     this.startAutoPlay();
 
+    if (this.options.autoFocus) {
+      this.focus();
+    }
+
     window.addEventListener(
       "resize",
       debounce<typeof this.updateSlideWidth>(
@@ -83,6 +90,10 @@ export class ImageCarousel {
         200
       )
     );
+  }
+
+  public focus() {
+    this.container.focus();
   }
 
   private createSlides() {
@@ -133,11 +144,36 @@ export class ImageCarousel {
     this.autoPlayButton.addEventListener("click", () =>
       this.autoPlayTimer ? this.stopAutoPlay() : this.startAutoPlay()
     );
-    this.container.addEventListener("keydown", this.handleKeyPress.bind(this));
     this.track.addEventListener("mouseenter", this.stopAutoPlay.bind(this));
     this.track.addEventListener("mouseleave", this.startAutoPlay.bind(this));
     this.track.addEventListener("touchstart", this.stopAutoPlay.bind(this));
     this.track.addEventListener("touchend", this.startAutoPlay.bind(this));
+
+    this.container.addEventListener(
+      "mouseenter",
+      this.handleFirstInteraction.bind(this),
+      { once: true }
+    );
+    this.container.addEventListener(
+      "touchstart",
+      this.handleFirstInteraction.bind(this),
+      { once: true }
+    );
+
+    this.prevButton.addEventListener("focus", () => (this.isFocused = true));
+    this.nextButton.addEventListener("focus", () => (this.isFocused = true));
+    this.setupKeyboardEvents();
+  }
+
+  private setupKeyboardEvents() {
+    this.container.addEventListener("focus", () => (this.isFocused = true));
+    this.container.addEventListener("blur", () => (this.isFocused = false));
+
+    document.addEventListener("keydown", this.handleKeyDown.bind(this));
+  }
+
+  private handleFirstInteraction(): void {
+    this.container.focus();
   }
 
   private setSlidePosition() {
@@ -246,13 +282,18 @@ export class ImageCarousel {
     }
   }
 
-  private handleKeyPress(event: KeyboardEvent) {
+  private handleKeyDown(event: KeyboardEvent) {
+    console.log("event :>> ", event);
+    if (!this.isFocused) return;
+
     switch (event.key) {
       case "ArrowLeft":
+        event.preventDefault();
         this.prev();
         break;
 
       case "ArrowRight":
+        event.preventDefault();
         this.next();
         break;
 
