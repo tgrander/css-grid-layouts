@@ -2,8 +2,6 @@ import { debounce } from "@utils/debounce";
 
 /**
     Event Listeners:
-        - ON CLICK PREV
-        - ON CLICK NEXT
         - ON CLICK DOT
         x ON CLICK PAUSE/PLAY (do after everything else is implemented)
  */
@@ -93,11 +91,12 @@ export class ImageCarousel {
       ".carousel__dots"
     ) as HTMLElement;
 
-    this.options.images.forEach(() => {
+    this.options.images.forEach((_, index) => {
       const dot = document.createElement("button");
       dot.classList.add("carousel__dot");
       dotsContainer.appendChild(dot);
       this.dots.push(dot);
+      dot.addEventListener("click", () => this.goToSlide(index));
     });
 
     this.updateActiveDot();
