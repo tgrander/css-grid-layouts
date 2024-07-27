@@ -3,6 +3,8 @@ export interface InputOptions {
   defaultValue?: string;
   class?: string | null;
   onChange?: (e: Event) => void;
+  onFocus?: (e: Event) => void;
+  onBlur?: (e: Event) => void;
 }
 
 export class AutoCompleteInputManager {
@@ -22,13 +24,21 @@ export class AutoCompleteInputManager {
       defaultValue: "",
       class: null,
       onChange: () => {},
+      onFocus: () => {},
+      onBlur: () => {},
       ...options,
     };
 
     this.input.placeholder = this.options.placeholder;
     this.input.value = this.options.defaultValue;
 
+    this.setupEventListeners();
+  }
+
+  private setupEventListeners() {
     this.input.addEventListener("input", this.handleInputChange.bind(this));
+    this.input.addEventListener("focus", this.handleOnFocus.bind(this));
+    this.input.addEventListener("blur", this.handleOnBlur.bind(this));
   }
 
   public getValue() {
@@ -44,5 +54,13 @@ export class AutoCompleteInputManager {
 
     this.setValue(target.value);
     this.options.onChange(event);
+  }
+
+  private handleOnFocus(event: Event) {
+    this.options.onFocus(event);
+  }
+
+  private handleOnBlur(event: Event) {
+    this.options.onBlur(event);
   }
 }

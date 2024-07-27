@@ -2,8 +2,10 @@ import type { SuggestionItem } from "../types";
 
 export interface SuggestionsOptions<T extends SuggestionItem> {
   defaultItems?: T[];
-  onSelect?: (item: T) => void;
   renderItem?: (item: T) => string;
+  onSelect?: (item: T) => void;
+  onOpen?: () => void;
+  onClose?: () => void;
 }
 
 export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
@@ -20,8 +22,10 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
     this.suggestionsContainer = suggestionsContainer;
     this.options = {
       defaultItems: [],
-      onSelect: () => {},
       renderItem: this.defaultRenderItem,
+      onSelect: () => {},
+      onOpen: () => {},
+      onClose: () => {},
       ...options,
     };
 
@@ -98,5 +102,15 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
       return JSON.stringify(item);
     }
     return String(item);
+  }
+
+  public open() {
+    this.suggestionsContainer.classList.remove("hidden");
+    this.options.onOpen();
+  }
+
+  public close() {
+    this.suggestionsContainer.classList.add("hidden");
+    this.options.onClose();
   }
 }
