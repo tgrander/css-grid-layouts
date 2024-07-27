@@ -1,0 +1,145 @@
+---
+
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Document</title>
+    <style>
+      html,
+      body {
+        min-height: 100dvh;
+        font-size: 100%;
+      }
+      body {
+        display: grid;
+        grid-template-columns: 20% 1fr 20%;
+        grid-template-areas:
+          ". . ."
+          ". carousel ."
+          ". . .";
+      }
+
+      .carousel-container {
+        grid-area: carousel;
+        width: 100%;
+        height: 100%;
+      }
+
+      .carousel-track-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        border-radius: 2rem;
+      }
+
+      .carousel-track {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.3s ease;
+      }
+
+      .carousel-slide {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .carousel-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      button {
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+        border-radius: 2rem;
+        padding: 0.25rem 1rem;
+        box-shadow: none;
+      }
+
+      .buttons-container {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        font-size: 1.2rem;
+      }
+      .navigation-buttons {
+        display: flex;
+        gap: 0.5rem;
+      }
+      .indicator-buttons {
+        display: flex;
+        gap: 1rem;
+      }
+      .dots-container {
+        display: flex;
+        align-items: center;
+        gap: 0.2rem;
+      }
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="carousel-container">
+      <div class="carousel-track-container">
+        <div class="carousel-track">
+          <div class="carousel-slide">
+            <img
+              src="/images/horizontal/festival.jpg"
+              alt="Image 1"
+              class="carousel-image"
+            />
+          </div>
+          <div class="carousel-slide">
+            <img
+              src="/images/horizontal/grove.jpg"
+              alt="Image 2"
+              class="carousel-image"
+            />
+          </div>
+          <div class="carousel-slide">
+            <img
+              src="/images/horizontal/meditation.jpg"
+              alt="Image 3"
+              class="carousel-image"
+            />
+          </div>
+          <div class="carousel-slide">
+            <img
+              src="/images/horizontal/snow.jpg"
+              alt="Image 4"
+              class="carousel-image"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="buttons-container">
+        <div class="indicator-buttons">
+          <button class="carousel-button play-pause">Pause</button>
+          <div class="dots-container"></div>
+        </div>
+        <div class="navigation-buttons">
+          <button class="carousel-button prev">Previous</button>
+          <button class="carousel-button next">Next</button>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script src="../../scripts/carousel/interview/init.ts"></script>
+</html>

@@ -199,14 +199,13 @@ export class ImageCarousel {
   }
 
   private updateSlideWidth() {
-    this.slideWidth = this.slides[0].getBoundingClientRect().width;
+    // this.slideWidth = this.slides[0].getBoundingClientRect().width;
     this.setSlidePosition();
   }
 
   private updateAutoplayButtonVisibility() {
     if (this.options.autoplay) {
       this.autoPlayButton.style.display = "flex";
-      this.isAutoPlaying = true;
     }
   }
 
