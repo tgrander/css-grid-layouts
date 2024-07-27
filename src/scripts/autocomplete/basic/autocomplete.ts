@@ -7,7 +7,7 @@ import {
   AutoCompleteDataProvider,
   AutoCompleteInputManager,
   AutoCompleteSuggestionsManager,
-} from "./autocomplete/";
+} from "./autocomplete/index";
 
 import type { SuggestionItem } from "./types";
 
