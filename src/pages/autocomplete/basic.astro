@@ -19,11 +19,6 @@ import BaseHead from "@components/BaseHead.astro";
         margin-inline: auto;
         /* display: grid; */
       }
-      ul {
-        padding: 0;
-        margin: 0;
-        list-style-type: none;
-      }
 
       .autocomplete__container {
         width: 50%;
@@ -70,7 +65,7 @@ import BaseHead from "@components/BaseHead.astro";
       </div>
 
       <div class="autocomplete__popover" aria-hidden="true">
-        <div class="autocomplete__suggestions-container"></div>
+        <div class="autocomplete__suggestions-container show"></div>
       </div>
     </main>
   </body><script src="../../scripts/autocomplete/basic/init.ts"></script>

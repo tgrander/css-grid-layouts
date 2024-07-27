@@ -63,6 +63,9 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
     ul.classList.add("autocomplete__suggestions");
     ul.id = "autocomplete__suggestions-list";
     ul.role = "listbox";
+    ul.style.listStyleType = "none";
+    ul.style.padding = "0";
+    ul.style.margin = "0";
 
     // Append list items
     ul.appendChild(listItems);
