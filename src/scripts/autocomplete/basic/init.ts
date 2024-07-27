@@ -22,11 +22,11 @@ const produceDataSource = async (query: string): Promise<ProduceItem[]> => {
 };
 
 const autocomplete = new AutoComplete<ProduceItem>(container, {
-  input: {
-    placeholder: "Search produce...",
-  },
   data: {
     dataSource: produceDataSource,
+  },
+  input: {
+    placeholder: "Search produce...",
   },
   suggestions: {
     defaultItems: produceItems,
