@@ -1,0 +1,69 @@
+---
+import BaseHead from "@components/BaseHead.astro";
+import Header from "@components/Header.astro";
+import "@styles/carousel/advanced-vanilla.css";
+import { ChevronLeft, ChevronRight, Pause } from "lucide-astro";
+import { SITE_DESCRIPTION, SITE_TITLE } from "../../consts";
+---
+
+<html lang="en">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+  </head>
+  <body>
+    <Header />
+    <main id="app">
+      <div class="heading">
+        <h3>🖼️ Image Carousel</h3>
+        <p>Advanced Vanilla JS Implementation</p>
+      </div>
+
+      <div class="carousel">
+        <div class="carousel__actions-container">
+          <div class="carousel__slideshow-progress">
+            <button class="pause-play">
+              <Pause />
+            </button>
+
+            <div class="carousel__dots">
+              <button class="dot"></button>
+              <button class="dot"></button>
+              <button class="dot"></button>
+              <button class="dot"></button>
+              <button class="dot"></button>
+            </div>
+          </div>
+
+          <div class="carousel__buttons">
+            <button class="carousel__button carousel__button--left">
+              <ChevronLeft />
+            </button>
+            <button class="carousel__button carousel__button--right">
+              <ChevronRight />
+            </button>
+          </div>
+        </div>
+
+        <div class="carousel__track-container">
+          <ul class="carousel__track">
+            <li class="carousel__slide">
+              <img src="/public/images/carousel/trey.jpg" />
+            </li>
+            <li class="carousel__slide">
+              <img src="/public/images/carousel/g.jpg" />
+            </li>
+            <li class="carousel__slide">
+              <img src="/public/images/carousel/h.jpg" />
+            </li>
+            <li class="carousel__slide">
+              <img src="/public/images/carousel/i.jpg" />
+            </li>
+            <li class="carousel__slide">
+              <img src="/public/images/carousel/f.jpg" />
+            </li>
+          </ul>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
