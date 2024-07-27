@@ -1,12 +1,9 @@
 import type { EventEmitter } from "@lib/event-emitter";
 
 export interface InputOptions {
-  eventEmitter: EventEmitter;
-
   placeholder?: string;
   defaultValue?: string;
   class?: string | null;
-
   onChange?: (e: Event) => void;
   onFocus?: (e: Event) => void;
   onBlur?: (e: Event) => void;
@@ -15,14 +12,21 @@ export interface InputOptions {
 export class AutoCompleteInputManager {
   private input: HTMLInputElement;
   private options: Required<InputOptions>;
+  private eventEmitter: EventEmitter;
 
-  constructor(container: HTMLElement, options: InputOptions) {
+  constructor(
+    container: HTMLElement,
+    options: InputOptions,
+    eventEmitter: EventEmitter
+  ) {
     this.input = container.closest("input") as HTMLInputElement;
     if (!this.input) {
       throw Error(
         `Input element not found within container element: ${container}`
       );
     }
+
+    this.eventEmitter = eventEmitter;
 
     this.options = {
       placeholder: "",

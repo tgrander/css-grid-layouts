@@ -2,8 +2,6 @@ import type { EventEmitter } from "@lib/event-emitter";
 import type { SuggestionItem } from "../types";
 
 export interface SuggestionsOptions<T extends SuggestionItem> {
-  eventEmitter: EventEmitter;
-
   defaultItems?: T[];
   renderItem?: (item: T) => string;
 
@@ -18,12 +16,17 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
   private currentSuggestions: T[] = [];
   private items: HTMLLIElement[] = [];
   private selectedItemIndex: number | null = null;
+  private eventEmitter: EventEmitter;
 
   constructor(
     suggestionsContainer: HTMLElement,
-    options: SuggestionsOptions<T>
+    options: SuggestionsOptions<T>,
+    eventEmitter: EventEmitter
   ) {
     this.suggestionsContainer = suggestionsContainer;
+
+    this.eventEmitter = eventEmitter;
+
     this.options = {
       defaultItems: [],
       renderItem: this.defaultRenderItem,

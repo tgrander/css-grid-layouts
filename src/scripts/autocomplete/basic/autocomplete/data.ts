@@ -7,19 +7,21 @@ export type DataSourceFunction<T extends SuggestionItem> = (
 
 export interface DataProviderOptions<T extends SuggestionItem> {
   dataSource: DataSourceFunction<T>;
-  eventEmitter: EventEmitter;
   debounceTime?: number | null;
 }
 
 export class AutoCompleteDataProvider<T extends SuggestionItem> {
   private options: Required<DataProviderOptions<T>>;
   private debounceTimer: number | null = null;
+  private eventEmitter: EventEmitter;
 
-  constructor(options: DataProviderOptions<T>) {
+  constructor(options: DataProviderOptions<T>, eventEmitter: EventEmitter) {
     this.options = {
       debounceTime: null,
       ...options,
     };
+
+    this.eventEmitter = eventEmitter;
   }
 
   public async fetchSuggestions(query: string): Promise<T[]> {

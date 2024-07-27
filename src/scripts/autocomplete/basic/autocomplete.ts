@@ -24,16 +24,19 @@ class AutoComplete<T extends SuggestionItem> {
   private inputManager: AutoCompleteInputManager;
   private suggestionsManager: AutoCompleteSuggestionsManager<T>;
   private dataProvider: AutoCompleteDataProvider<T>;
+  private eventEmitter: EventEmitter;
 
   constructor(container: HTMLElement, options: AutoCompleteOptions<T>) {
     this.container = container;
 
     // Event Emitter
     const eventEmitter = new EventEmitter();
+    this.eventEmitter = eventEmitter;
+
     // Options
     this.options = {
-      input: { eventEmitter },
-      suggestions: { eventEmitter },
+      input: {},
+      suggestions: {},
       ...options,
     };
 
@@ -49,18 +52,20 @@ class AutoComplete<T extends SuggestionItem> {
     // Input field
     this.inputManager = new AutoCompleteInputManager(
       inputContainer,
-      this.options.input
+      this.options.input,
+      this.eventEmitter
     );
     // Suggestions list
     this.suggestionsManager = new AutoCompleteSuggestionsManager(
       suggestionsContainer,
-      this.options.suggestions
+      this.options.suggestions,
+      this.eventEmitter
     );
     // Data source
-    this.dataProvider = new AutoCompleteDataProvider<T>({
-      ...this.options.data,
-      eventEmitter,
-    });
+    this.dataProvider = new AutoCompleteDataProvider<T>(
+      this.options.data,
+      this.eventEmitter
+    );
   }
 }
 
