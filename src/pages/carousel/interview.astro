@@ -78,7 +78,7 @@
         gap: 0.5rem;
       }
 
-      .navigation-buttons > .carousel-button svg {
+      .carousel-button svg {
         width: 24px;
         height: 24px;
       }
@@ -97,6 +97,10 @@
         height: 12px;
         border-radius: 50%;
         background: rgba(0, 0, 0, 0.3);
+      }
+
+      .hidden {
+        display: none;
       }
     </style>
   </head>
@@ -136,16 +140,32 @@
       </div>
       <div class="buttons-container">
         <div class="indicator-buttons">
-          <button class="carousel-button play-pause">Pause</button>
+          <button
+            class="carousel-button carousel-button--pause"
+            aria-label="Stop autoplay"
+          >
+            <svg>
+              <use href="#pause"></use>
+            </svg>
+          </button>
+
+          <button
+            class="carousel-button carousel-button--play"
+            aria-label="Start autoplay"
+          >
+            <svg>
+              <use href="#play"></use>
+            </svg>
+          </button>
           <div class="dots-container"></div>
         </div>
         <div class="navigation-buttons">
-          <button class="carousel-button prev">
+          <button class="carousel-button prev" aria-label="Previous slide">
             <svg>
               <use href="#chevron-left"></use>
             </svg>
           </button>
-          <button class="carousel-button next">
+          <button class="carousel-button next" aria-label="Next slide">
             <svg>
               <use href="#chevron-right"></use>
             </svg>
@@ -160,6 +180,12 @@
       </symbol>
       <symbol id="chevron-right" viewBox="0 0 24 24">
         <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
+      </symbol>
+      <symbol id="pause" viewBox="0 0 24 24">
+        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path>
+      </symbol>
+      <symbol id="play" viewBox="0 0 24 24">
+        <path d="M8 5v14l11-7z"></path>
       </symbol>
     </svg>
   </body>

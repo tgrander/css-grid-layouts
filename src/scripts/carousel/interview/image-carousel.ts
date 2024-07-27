@@ -16,8 +16,8 @@ export class ImageCarousel {
   private track: HTMLElement;
   private prevButton: HTMLElement;
   private nextButton: HTMLElement;
-  private playPauseButton: HTMLElement;
-  private images: CarouselImage[] = [];
+  private pauseButton: HTMLElement;
+  private playButton: HTMLElement;
   private slides: HTMLElement[] = [];
   private dots: HTMLElement[] = [];
   private currentIndex = 0;
@@ -42,17 +42,17 @@ export class ImageCarousel {
     this.nextButton = this.container.querySelector(
       ".carousel-button.next"
     ) as HTMLElement;
-    this.playPauseButton = this.container.querySelector(
-      ".carousel-button.play-pause"
+    this.pauseButton = this.container.querySelector(
+      ".carousel-button--pause"
+    ) as HTMLElement;
+    this.playButton = this.container.querySelector(
+      ".carousel-button--play"
     ) as HTMLElement;
 
     this.createSlides();
     this.createDots();
+    this.setupAutoPlay();
     this.setupEventListeners();
-
-    if (this.options.autoplay) {
-      this.startAutoPlay();
-    }
   }
 
   private createSlides() {
@@ -78,11 +78,32 @@ export class ImageCarousel {
 
     this.updateActiveDot();
   }
+  private setupAutoPlay() {
+    if (this.options.autoplay) {
+      // Show pause btn
+      this.pauseButton.classList.remove("hidden");
+      // Hide play btn
+      this.playButton.classList.add("hidden");
+      this.playButton.ariaHidden = "true";
+
+      this.startAutoPlay();
+    } else {
+      // Show play btn
+      this.playButton.classList.remove("hidden");
+      // Hide pause btn
+      this.pauseButton.classList.add("hidden");
+      this.pauseButton.ariaHidden = "true";
+    }
+  }
 
   private setupEventListeners() {
     this.prevButton.addEventListener("click", () => this.prev());
     this.nextButton.addEventListener("click", () => this.next());
-    this.playPauseButton.addEventListener(
+    this.pauseButton.addEventListener(
+      "click",
+      this.handleClickPlayPauseButton.bind(this)
+    );
+    this.playButton.addEventListener(
       "click",
       this.handleClickPlayPauseButton.bind(this)
     );
@@ -111,6 +132,11 @@ export class ImageCarousel {
 
   private next() {
     this.goToSlide(this.currentIndex + 1);
+
+    if (this.options.autoplay) {
+      this.stopAutoPlay();
+      this.startAutoPlay();
+    }
   }
 
   private handleClickPlayPauseButton() {
@@ -122,20 +148,24 @@ export class ImageCarousel {
   }
 
   private startAutoPlay() {
-    if (this.options.autoplay && !this.autoplayTimer) {
+    if (this.options.autoplay && this.autoplayTimer === null) {
       this.autoplayTimer = window.setInterval(
         () => this.next(),
         this.options.autoplayDelay
       );
-      this.playPauseButton.textContent = "Pause";
+      // Show pause button + hide play button
+      this.pauseButton.classList.toggle("hidden", false);
+      this.playButton.classList.toggle("hidden", true);
     }
   }
 
   private stopAutoPlay() {
-    if (this.autoplayTimer) {
+    if (this.autoplayTimer !== null) {
       window.clearInterval(this.autoplayTimer);
       this.autoplayTimer = null;
-      this.playPauseButton.textContent = "Play";
+      // Show play button + hide pause button
+      this.playButton.classList.toggle("hidden", false);
+      this.pauseButton.classList.toggle("hidden", true);
     }
   }
 }
