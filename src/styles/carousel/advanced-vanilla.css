@@ -88,10 +88,14 @@ main#app {
   border-radius: var(--rounded-full);
   padding: 0.25rem;
 }
-.carousel__autoplay-btn svg {
+.carousel__autoplay-icon svg {
+  display: flex;
   fill: var(--white);
   stroke: var(--white);
   stroke-width: 0.5px;
+}
+.carousel__autoplay-icon--start {
+  display: none;
 }
 .carousel__autoplay-btn:hover {
   background: var(--bg-hover);

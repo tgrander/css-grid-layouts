@@ -8,8 +8,6 @@ import { debounce } from "@utils/debounce";
         AUTOPLAY
         START/STOP AUTOPLAY
           - click autoplay button
-          - mouse enters/leaves carousel
-          - touch carousel (mobile event)
 
         KEYBOARD NAVIGATION
           - pressing left arrow key goes to next slide
@@ -34,6 +32,7 @@ export class ImageCarousel {
   private container: HTMLElement;
   private track: HTMLElement;
   private autoPlayButton: HTMLElement;
+  private autoPlayButtonIcons: HTMLElement[];
   private slides: HTMLElement[] = [];
   private dots: HTMLElement[] = [];
   private prevButton: HTMLElement;
@@ -59,6 +58,9 @@ export class ImageCarousel {
     this.autoPlayButton = this.container.querySelector(
       ".carousel__autoplay-btn"
     ) as HTMLElement;
+    this.autoPlayButtonIcons = Array.from(
+      this.autoPlayButton.children
+    ) as HTMLElement[];
     this.prevButton = document.querySelector(
       ".carousel__button--left"
     ) as HTMLElement;
@@ -128,13 +130,14 @@ export class ImageCarousel {
   private setupEventListeners() {
     this.prevButton.addEventListener("click", () => this.prev());
     this.nextButton.addEventListener("click", () => this.next());
-    this.container.addEventListener("mouseenter", this.stopAutoPlay.bind(this));
-    this.container.addEventListener(
-      "mouseleave",
-      this.startAutoPlay.bind(this)
+    this.autoPlayButton.addEventListener("click", () =>
+      this.autoPlayTimer ? this.stopAutoPlay() : this.startAutoPlay()
     );
-    this.container.addEventListener("touchstart", this.stopAutoPlay.bind(this));
-    this.container.addEventListener("touchend", this.startAutoPlay.bind(this));
+    this.container.addEventListener("keydown", this.handleKeyPress.bind(this));
+    this.track.addEventListener("mouseenter", this.stopAutoPlay.bind(this));
+    this.track.addEventListener("mouseleave", this.startAutoPlay.bind(this));
+    this.track.addEventListener("touchstart", this.stopAutoPlay.bind(this));
+    this.track.addEventListener("touchend", this.startAutoPlay.bind(this));
   }
 
   private setSlidePosition() {
@@ -225,6 +228,10 @@ export class ImageCarousel {
         () => this.next(),
         this.options.autoplayDelay
       );
+
+      this.autoPlayButtonIcons.forEach((icon) => {
+        icon.style.display = icon.className.includes("stop") ? "flex" : "none";
+      });
     }
   }
 
@@ -232,6 +239,25 @@ export class ImageCarousel {
     if (this.autoPlayTimer) {
       window.clearInterval(this.autoPlayTimer);
       this.autoPlayTimer = null;
+
+      this.autoPlayButtonIcons.forEach((icon) => {
+        icon.style.display = icon.className.includes("start") ? "flex" : "none";
+      });
+    }
+  }
+
+  private handleKeyPress(event: KeyboardEvent) {
+    switch (event.key) {
+      case "ArrowLeft":
+        this.prev();
+        break;
+
+      case "ArrowRight":
+        this.next();
+        break;
+
+      default:
+        break;
     }
   }
 }

@@ -2,7 +2,7 @@
 import BaseHead from "@components/BaseHead.astro";
 import Header from "@components/Header.astro";
 import "@styles/carousel/advanced-vanilla.css";
-import { ChevronLeft, ChevronRight, Pause } from "lucide-astro";
+import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-astro";
 import { SITE_DESCRIPTION, SITE_TITLE } from "../../consts";
 ---
 
@@ -27,7 +27,16 @@ import { SITE_DESCRIPTION, SITE_TITLE } from "../../consts";
         <div class="carousel__actions-container">
           <div class="carousel__slideshow-progress">
             <button class="carousel__autoplay-btn">
-              <Pause />
+              <span
+                class="carousel__autoplay-icon carousel__autoplay-icon--stop"
+              >
+                <Pause />
+              </span>
+              <span
+                class="carousel__autoplay-icon carousel__autoplay-icon--start"
+              >
+                <Play />
+              </span>
             </button>
 
             <div
