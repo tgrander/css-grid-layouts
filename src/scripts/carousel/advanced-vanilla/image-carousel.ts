@@ -24,8 +24,8 @@ export class ImageCarousel {
   private dots: HTMLElement[] = [];
   private prevButton: HTMLElement;
   private nextButton: HTMLElement;
+  private observer!: IntersectionObserver;
   private currentIndex = 0;
-  private intervalProgress: number = 0;
   private autoPlayTimer: number | null = null;
   private isFocused: boolean = false;
 
@@ -55,6 +55,7 @@ export class ImageCarousel {
       ".carousel__button--right"
     ) as HTMLElement;
 
+    this.setupIntersectionObserver();
     this.createSlides();
     this.createDots();
     this.updateAutoplayButtonVisibility();
@@ -80,6 +81,28 @@ export class ImageCarousel {
     this.container.focus();
   }
 
+  private setupIntersectionObserver(): void {
+    this.observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const img = entry.target as HTMLImageElement;
+            if (img.dataset.src) {
+              img.src = img.dataset.src;
+              img.removeAttribute("data-src");
+              this.observer.unobserve(img);
+            }
+          }
+        });
+      },
+      {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.1,
+      }
+    );
+  }
+
   private createSlides() {
     this.options.images.forEach((image, index) => {
       const slide = document.createElement("li");
@@ -90,12 +113,21 @@ export class ImageCarousel {
       slide.ariaLabel = `Slide ${index + 1} of ${this.options.images.length}`;
 
       const img = document.createElement("img");
-      img.src = image.src;
       img.alt = image.alt ?? `Image ${index + 1} of image carousel`;
+
+      if (index === this.currentIndex) {
+        img.src = image.src;
+      } else {
+        img.dataset.src = image.src;
+        img.src =
+          "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="; // Placeholder
+      }
 
       slide.appendChild(img);
       this.track.appendChild(slide);
       this.slides.push(slide);
+
+      this.observer.observe(img);
     });
 
     this.updateActiveSlide();
@@ -207,12 +239,22 @@ export class ImageCarousel {
     }
 
     this.currentIndex = index;
-    this.track.style.transform = `translateX(-${
-      index * 100
-    }%)`; /* Update: translate track */
+    this.track.style.transform = `translateX(-${index * 100}%)`;
     this.updateActiveSlide();
     this.updateActiveDot();
     this.updateButtonsVisibility();
+
+    // Trigger lazy loading for nearby slides
+    const nearbyIndexes = [index - 1, index, index + 1];
+    nearbyIndexes.forEach((i) => {
+      if (i >= 0 && i < this.slides.length) {
+        const img = this.slides[i].querySelector("img");
+        if (img && img.dataset.src) {
+          img.src = img.dataset.src;
+          img.removeAttribute("data-src");
+        }
+      }
+    });
   }
 
   private updateActiveSlide() {
