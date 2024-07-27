@@ -108,17 +108,9 @@ export class ImageCarousel {
     this.nextButton.addEventListener("click", () => this.next());
   }
 
-  // private setSlidePosition() {
-  //   this.slides.forEach((slide, index) => {
-  //     slide.style.left = `-${index * this.slideWidth}px`;
-  //   });
-  // }
-
   private setSlidePosition() {
     this.slides.forEach((slide, index) => {
-      slide.style.left = `${
-        index * 100
-      }%`; /* Update: set each slide's position */
+      slide.style.left = `${index * 100}%`;
     });
   }
 
