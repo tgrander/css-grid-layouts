@@ -1,4 +1,10 @@
-export default [
+export interface ProduceItem {
+  id: number;
+  name: string;
+  category: "Fruit" | "Vegetable";
+}
+
+const produceItems: ProduceItem[] = [
   {
     id: 1,
     name: "Apple",
@@ -50,3 +56,5 @@ export default [
     category: "Fruit",
   },
 ];
+
+export default produceItems;
