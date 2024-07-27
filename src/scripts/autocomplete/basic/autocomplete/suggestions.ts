@@ -3,7 +3,9 @@ import type { SuggestionItem } from "../types";
 
 export interface SuggestionsOptions<T extends SuggestionItem> {
   defaultItems?: T[];
-  renderItem?: (item: T) => string;
+  renderItem?: (item: T) => string | HTMLElement;
+  itemClassName?: string;
+  selectedItemClassName?: string;
 
   onSelect?: (item: T) => void;
   onOpen?: () => void;
@@ -29,6 +31,8 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
 
     this.options = {
       defaultItems: [],
+      itemClassName: "autocomplete__suggestion-item",
+      selectedItemClassName: "autocomplete__suggestion-item--selected",
       renderItem: this.defaultRenderItem,
       onSelect: () => {},
       onOpen: () => {},
@@ -49,9 +53,15 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
     this.currentSuggestions.forEach((item, index) => {
       const li = document.createElement("li");
       li.id = `item-${index + 1}`;
-      li.classList.add("autocomplete__suggestion-item");
+      li.classList.add(this.options.itemClassName);
       li.role = "option";
-      li.innerHTML = this.options.renderItem(item);
+
+      const renderedItem = this.options.renderItem(item);
+      if (typeof renderedItem === "string") {
+        li.innerHTML = renderedItem;
+      } else {
+        li.appendChild(renderedItem);
+      }
 
       listItems.appendChild(li);
       this.items.push(li);
@@ -102,11 +112,14 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
     this.options.onSelect(this.currentSuggestions[this.selectedItemIndex]);
 
     this.items.forEach((item, index) => {
-      item.classList.toggle("selected", index === selectedIndex);
+      item.classList.toggle(
+        this.options.selectedItemClassName,
+        index === selectedIndex
+      );
     });
   }
 
-  private defaultRenderItem(item: T) {
+  private defaultRenderItem(item: T): string {
     if (typeof item === "string") return item;
     else if (typeof item === "object" && item !== null) {
       return JSON.stringify(item);
