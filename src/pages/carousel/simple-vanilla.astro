@@ -1,0 +1,125 @@
+---
+import BaseHead from "@components/BaseHead.astro";
+import Header from "@components/Header.astro";
+import { ChevronLeft, ChevronRight } from "lucide-astro";
+import { SITE_DESCRIPTION, SITE_TITLE } from "../../consts";
+---
+
+<html lang="en">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    <style>
+      .carousel {
+        position: relative;
+        height: 600px;
+        width: 80%;
+        /* max-width: 600px; */
+        margin: 0 auto;
+      }
+
+      .carousel__image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .carousel__track-container {
+        position: relative;
+        background: lightgreen;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .carousel__track {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        position: relative;
+        height: 100%;
+        transition: transform 250ms ease-in-out;
+      }
+
+      .carousel__slide {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }
+
+      .carousel__button {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: transparent;
+        border: 0;
+        cursor: pointer;
+        font-size: 3rem;
+      }
+      .carousel__button svg {
+        width: 3rem;
+        height: 3rem;
+      }
+      .carousel__button--left {
+        left: -55px;
+      }
+      .carousel__button--right {
+        right: -55px;
+      }
+
+      .carousel__nav {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        padding: 1rem 0;
+      }
+
+      .carousel__dot {
+        border: 0;
+        border-radius: 50%;
+        width: 15px;
+        height: 15px;
+        background: rgba(0, 0, 0, 0.3);
+      }
+      .carousel__dot.current {
+        background: rgba(0, 0, 0, 0.75);
+      }
+    </style>
+  </head>
+  <body>
+    <Header />
+
+    <main>
+      <h2>🖼️ Image Carousel</h2>
+
+      <div class="carousel">
+        <button class="carousel__button carousel__button--left">
+          <ChevronLeft />
+        </button>
+
+        <div class="carousel__track-container">
+          <ul class="carousel__track">
+            <li class="carousel__slide current">
+              <img class="carousel__image" src="/images/carousel/a.jpg" />
+            </li>
+            <li class="carousel__slide">
+              <img class="carousel__image" src="/images/carousel/b.jpg" />
+            </li>
+            <li class="carousel__slide">
+              <img class="carousel__image" src="/images/carousel/d.jpg" />
+            </li>
+          </ul>
+        </div>
+
+        <button class="carousel__button carousel__button--right">
+          <ChevronRight />
+        </button>
+
+        <div class="carousel__nav">
+          <button class="carousel__dot current"></button>
+          <button class="carousel__dot"></button>
+          <button class="carousel__dot"></button>
+        </div>
+      </div>
+    </main>
+  </body><script src="../../scripts/carousel/simple-vanilla.ts"></script>
+</html>
