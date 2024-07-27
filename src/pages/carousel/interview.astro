@@ -92,11 +92,22 @@
         align-items: center;
         gap: 0.2rem;
       }
-      .dot {
+      .dots-container > button.dot {
         width: 12px;
         height: 12px;
         border-radius: 50%;
         background: rgba(0, 0, 0, 0.3);
+        border: none;
+        padding: 0;
+        margin: 0 4px;
+        cursor: pointer;
+      }
+      .dots-container > button.dot:hover,
+      .dots-container > button.dot:focus {
+        background: rgba(0, 0, 0, 0.5);
+      }
+      .dots-container > button.dot.active {
+        background: rgba(0, 0, 0, 0.7);
       }
 
       .hidden {
@@ -157,8 +168,15 @@
               <use href="#play"></use>
             </svg>
           </button>
-          <div class="dots-container"></div>
+
+          <div
+            class="dots-container"
+            role="tablist"
+            aria-label="Slide indicators"
+          >
+          </div>
         </div>
+
         <div class="navigation-buttons">
           <button class="carousel-button prev" aria-label="Previous slide">
             <svg>

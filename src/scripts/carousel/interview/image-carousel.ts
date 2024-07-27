@@ -69,15 +69,18 @@ export class ImageCarousel {
     this.slides.forEach((_, index) => {
       const dot = document.createElement("button");
       dot.classList.add("dot");
+      dot.role = "tab";
+      dot.setAttribute("aria-controls", `slide${index + 1}`);
+      dot.ariaLabel = `Slide ${index + 1}`;
 
       dotsContainer.appendChild(dot);
-      dot.addEventListener("click", () => this.goToSlide(index));
-
       this.dots.push(dot);
+      dot.addEventListener("click", () => this.goToSlide(index));
     });
 
     this.updateActiveDot();
   }
+
   private setupAutoPlay() {
     if (this.options.autoplay) {
       // Show pause btn
