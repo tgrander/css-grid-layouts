@@ -1,19 +1,5 @@
 import { debounce } from "@utils/debounce";
 
-/**
-    Event Listeners:
-        ON CLICK PAUSE/PLAY (do after everything else is implemented)
-
-    To Do: 
-        AUTOPLAY
-        START/STOP AUTOPLAY
-          - click autoplay button
-
-        KEYBOARD NAVIGATION
-          - pressing left arrow key goes to next slide
-          - pressing right arrow key goes to prev slide
- */
-
 export interface CarouselImage {
   src: string;
   alt?: string;
@@ -39,8 +25,6 @@ export class ImageCarousel {
   private prevButton: HTMLElement;
   private nextButton: HTMLElement;
   private currentIndex = 0;
-  private isAutoPlaying: boolean = false;
-  private slideWidth: number = 0;
   private intervalProgress: number = 0;
   private autoPlayTimer: number | null = null;
   private isFocused: boolean = false;
@@ -283,7 +267,6 @@ export class ImageCarousel {
   }
 
   private handleKeyDown(event: KeyboardEvent) {
-    console.log("event :>> ", event);
     if (!this.isFocused) return;
 
     switch (event.key) {
