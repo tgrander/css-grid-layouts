@@ -112,12 +112,12 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
   }
 
   public open() {
-    this.suggestionsContainer.classList.remove("hidden");
+    this.suggestionsContainer.classList.add("show");
     this.options.onOpen();
   }
 
   public close() {
-    this.suggestionsContainer.classList.add("hidden");
+    this.suggestionsContainer.classList.remove("show");
     this.options.onClose();
   }
 }
