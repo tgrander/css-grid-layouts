@@ -108,7 +108,7 @@ button.pause-play:hover {
 .carousel__dot:hover {
   background: var(--bg-hover);
 }
-.carousel__dot.current {
+.carousel__dot.active {
   background: var(--white);
 }
 

@@ -27,6 +27,7 @@ export class ImageCarousel {
   private slides: HTMLElement[] = [];
   private dots: HTMLElement[] = [];
   private options: Required<CarouselOptions>;
+  private currentIndex = 0;
 
   constructor(container: HTMLElement, options: CarouselOptions) {
     this.container = container;
@@ -61,11 +62,19 @@ export class ImageCarousel {
       ".carousel__dots"
     ) as HTMLElement;
 
-    this.options.images.forEach((image, index) => {
+    this.options.images.forEach(() => {
       const dot = document.createElement("button");
       dot.classList.add("carousel__dot");
       dotsContainer.appendChild(dot);
       this.dots.push(dot);
     });
+
+    this.updateActiveDot();
+  }
+
+  private updateActiveDot() {
+    this.dots.forEach((dot, index) =>
+      dot.classList.toggle("active", this.currentIndex === index)
+    );
   }
 }
