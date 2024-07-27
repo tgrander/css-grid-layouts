@@ -19,7 +19,6 @@ interface InputOptions {
   placeholder?: string;
   defaultValue?: string;
   class?: string | null;
-
   onChange?: (e: Event) => void;
 }
 
@@ -28,9 +27,12 @@ class AutoCompleteInputManager {
   private options: Required<InputOptions>;
 
   constructor(container: HTMLElement, options: InputOptions) {
-    this.input = container.querySelector(
-      ".autocomplete__search-input"
-    ) as HTMLInputElement;
+    this.input = container.closest("input") as HTMLInputElement;
+    if (!this.input) {
+      throw Error(
+        `Input element not found within container element: ${container}`
+      );
+    }
 
     this.options = {
       placeholder: "",
@@ -171,32 +173,91 @@ class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
 /**
  * DATA SOURCE
  */
-interface DatasourceOptions {}
+type DataSourceFunction<T extends SuggestionItem> = (
+  query: string
+) => Promise<T[]>;
 
-class AutoCompleteDataSource {}
+interface DataProviderOptions<T extends SuggestionItem> {
+  dataSource: DataSourceFunction<T>;
+  debounceTime?: number | null;
+}
+
+class AutoCompleteDataProvider<T extends SuggestionItem> {
+  private options: Required<DataProviderOptions<T>>;
+  private debounceTimer: number | null = null;
+
+  constructor(options: DataProviderOptions<T>) {
+    this.options = {
+      debounceTime: null,
+      ...options,
+    };
+  }
+
+  public async fetchSuggestions(query: string): Promise<T[]> {
+    return new Promise((resolve, reject) => {
+      if (this.options.debounceTime) {
+        if (this.debounceTimer !== null) {
+          clearTimeout(this.debounceTimer);
+        }
+        this.debounceTimer = window.setTimeout(async () => {
+          try {
+            const results = await this.options.dataSource(query);
+            resolve(results);
+          } catch (error) {
+            reject(error);
+          }
+        }, this.options.debounceTime);
+      }
+    });
+  }
+}
 
 /**
  * CONTROLLER
  */
-interface AutoCompleteOptions {
+interface AutoCompleteOptions<T extends SuggestionItem> {
+  data: DataProviderOptions<T>;
   input?: InputOptions;
+  suggestions?: SuggestionsOptions<T>;
 }
 
-class AutoComplete {
+class AutoComplete<T extends SuggestionItem> {
   private container: HTMLElement;
-  private options: Required<AutoCompleteOptions>;
+  private options: Required<AutoCompleteOptions<T>>;
   private inputManager: AutoCompleteInputManager;
+  private suggestionsManager: AutoCompleteSuggestionsManager<T>;
+  private dataProvider: AutoCompleteDataProvider<T>;
 
-  constructor(container: HTMLElement, options: AutoCompleteOptions) {
+  constructor(container: HTMLElement, options: AutoCompleteOptions<T>) {
     this.container = container;
     this.options = {
       input: {},
+      suggestions: {},
       ...options,
     };
 
+    // Get container elements
+    const inputContainer = this.container.querySelector(
+      ".autocomplete__search-input-container"
+    ) as HTMLElement;
+    const suggestionsContainer = this.container.querySelector(
+      ".autocomplete__suggestions-container"
+    ) as HTMLElement;
+
+    // Initialize sub-component manager classes
+    // Input field
     this.inputManager = new AutoCompleteInputManager(
-      this.container,
+      inputContainer,
       this.options.input
     );
+    // Suggestions list
+    this.suggestionsManager = new AutoCompleteSuggestionsManager(
+      suggestionsContainer,
+      this.options.suggestions
+    );
+    // Data source
+    this.dataProvider = new AutoCompleteDataProvider<T>(this.options.data);
   }
 }
+
+export default AutoComplete;
