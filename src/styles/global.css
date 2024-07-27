@@ -41,6 +41,7 @@ body {
   color: rgb(var(--gray-dark));
   font-size: 100%;
   line-height: 1.7;
+  box-sizing: border-box;
 }
 main {
   max-width: calc(100% - 2em);

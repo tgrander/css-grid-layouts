@@ -31,11 +31,12 @@ main#app {
 }
 
 .carousel__track-container {
+  position: relative;
   height: 100%;
+  overflow: hidden;
 }
 
 .carousel__track {
-  position: relative;
   display: flex;
   height: 100%;
   list-style: none;
@@ -45,8 +46,10 @@ main#app {
 
 .carousel__slide {
   position: absolute;
-  height: 100%;
+  top: 0;
+  bottom: 0;
   width: 100%;
+  min-width: 100%;
 }
 .carousel__slide img {
   object-fit: cover;
@@ -75,20 +78,21 @@ main#app {
   padding-right: 0.75rem;
   padding-left: 0.5rem;
 }
-button.pause-play {
-  display: flex;
+.carousel__autoplay-btn {
+  /* display: flex; */
+  display: none;
   place-items: center;
   border: none;
   background: transparent;
   border-radius: var(--rounded-full);
   padding: 0.25rem;
 }
-button.pause-play svg {
+.carousel__autoplay-btn svg {
   fill: var(--white);
   stroke: var(--white);
   stroke-width: 0.5px;
 }
-button.pause-play:hover {
+.carousel__autoplay-btn:hover {
   background: var(--bg-hover);
 }
 .carousel__dots {

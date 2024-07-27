@@ -12,7 +12,6 @@ const imageUrls = [
   "/images/carousel/h.jpg",
   "/images/carousel/i.jpg",
   "/images/carousel/f.jpg",
-  "/images/carousel/trey.jpg",
 ];
 
 const images: CarouselImage[] = imageUrls.map((url, index) => ({
