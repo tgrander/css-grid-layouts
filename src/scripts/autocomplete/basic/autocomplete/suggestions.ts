@@ -51,13 +51,13 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
     this.container.innerHTML = "";
     suggestions.slice(0, this.options.maxItems).forEach((item, index) => {
       const li = document.createElement("li");
-      li.id = `item-${index + 1}`;
+      li.id = getItemId(index);
       li.classList.add("autocomplete__suggestion-item");
       li.role = "option";
       li.dataset.index = index.toString();
       li.innerHTML = this.options.renderItem(item);
 
-      li.addEventListener("click", () => this.handleItemClick(item, index));
+      li.addEventListener("click", () => this.handleItemClick(item, index, li));
       li.addEventListener("mouseover", () => this.highlightItem(index));
       this.container.appendChild(li);
     });
@@ -75,13 +75,39 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
     });
   }
 
-  private handleItemClick(item: T, index: number) {
-    this.eventEmitter.emit(AutoCompleteEventType.SuggestionSelected, item);
+  private handleItemClick(item: T, index: number, el: HTMLElement) {
     this.currentSelected = index;
+    this.addCheckIcon(this.currentSelected);
+    this.eventEmitter.emit(AutoCompleteEventType.SuggestionSelected, item);
   }
 
-  private getItems() {
-    return Array.from(this.container.children) as HTMLElement[];
+  private addCheckIcon(index: number) {
+    const li = this.container.querySelector(`#${getItemId(index)}`);
+    if (li) {
+      const checkIcon = document.createElement("span");
+      checkIcon.classList.add("icon", "icon-selected");
+      checkIcon.innerHTML = `
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-check"
+        >
+          <path d="M20 6 9 17l-5-5" />
+        </svg>
+      `;
+      li.appendChild(checkIcon);
+    }
+  }
+
+  private removeCheckIcon(index: number) {
+    const li = this.container.querySelector(`#${getItemId(index)}`);
   }
 
   public render(suggestions: T[]) {
@@ -108,7 +134,8 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
   }
 
   public highlightItem(index: number) {
-    this.getItems().forEach((item, i) => {
+    const items = Array.from(this.container.children) as HTMLElement[];
+    items.forEach((item, i) => {
       if (index === i) {
         item.classList.add("highlighted");
       } else {
@@ -119,4 +146,8 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
     this.currentHighlight = index;
     this.eventEmitter.emit(AutoCompleteEventType.SuggestionHighlight, index);
   }
+}
+
+function getItemId(index: number) {
+  return `item-${index + 1}`;
 }

@@ -3,27 +3,21 @@ import {
   AutoCompleteInputManager,
   AutoCompleteSuggestionsManager,
 } from "./autocomplete/index";
+import type { AutoCompleteState, SuggestionItem } from "./types";
 import type {
   DataProviderOptions,
   InputOptions,
   SuggestionsOptions,
 } from "./autocomplete/";
 
+import type { AutoCompleteEventMap } from "../events";
 import { AutoCompleteEventType } from "../events";
 import { EventEmitter } from "@lib/event-emitter";
-import type { SuggestionItem } from "./types";
 
 interface AutoCompleteOptions<T extends SuggestionItem> {
   data: DataProviderOptions<T>;
   input?: InputOptions;
   suggestions?: SuggestionsOptions<T>;
-}
-
-interface AutoCompleteState<T extends SuggestionItem> {
-  isLoading: boolean;
-  error: Error | null;
-  suggestions: T[];
-  selectedIndex: number;
 }
 
 class AutoComplete<T extends SuggestionItem> {
@@ -32,7 +26,7 @@ class AutoComplete<T extends SuggestionItem> {
   private inputManager!: AutoCompleteInputManager;
   private suggestionsManager!: AutoCompleteSuggestionsManager<T>;
   private dataProvider!: AutoCompleteDataProvider<T>;
-  private eventEmitter: EventEmitter;
+  private eventEmitter: EventEmitter<AutoCompleteEventMap<T>>;
   private state: AutoCompleteState<T> = {
     isLoading: false,
     error: null,
@@ -120,7 +114,7 @@ class AutoComplete<T extends SuggestionItem> {
 
   private handleInputBlur() {
     // Add a small delay to allow for suggestion selection
-    setTimeout(() => this.suggestionsManager.close()), 200;
+    setTimeout(() => this.suggestionsManager.close(), 200);
   }
 
   private handleInputChange(query: string) {
@@ -133,8 +127,10 @@ class AutoComplete<T extends SuggestionItem> {
     this.suggestionsManager.render(suggestions);
   }
 
-  private handleSuggestionSelected(suggestion: T) {
-    this.inputManager.setValue(suggestion.value);
+  private handleSuggestionSelected(
+    data: AutoCompleteEventMap<T>[AutoCompleteEventType.SuggestionSelected]
+  ) {
+    this.inputManager.setValue(data.item.value);
     this.suggestionsManager.close();
   }
 

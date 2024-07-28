@@ -1,6 +1,7 @@
 ---
 import BaseHead from "@components/BaseHead.astro";
 import "@styles/autocomplete/basic.css";
+import { ChevronsUpDown } from "lucide-astro";
 ---
 
 <html lang="en">
@@ -26,10 +27,13 @@ import "@styles/autocomplete/basic.css";
           aria-owns="autocomplete__suggestions-list"
           aria-activedescendant=""
         />
+        <span class="icon icon--right">
+          <ChevronsUpDown />
+        </span>
       </div>
 
       <div class="autocomplete__popover" aria-hidden="true">
-        <div class="autocomplete__suggestions-container">
+        <div class="autocomplete__suggestions-container show">
           <div class="autocomplete__suggestions-relative-wrapper">
             <ul
               class="autocomplete__suggestions"
