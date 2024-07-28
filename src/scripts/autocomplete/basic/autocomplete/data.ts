@@ -18,7 +18,7 @@ export class AutoCompleteDataProvider<T extends SuggestionItem> {
 
   constructor(options: DataProviderOptions<T>, eventEmitter: EventEmitter) {
     this.options = {
-      debounceTime: 300,
+      debounceTime: 100,
       ...options,
     };
     this.eventEmitter = eventEmitter;

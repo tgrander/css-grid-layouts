@@ -9,12 +9,12 @@ body {
 body {
   width: 90%;
   margin-inline: auto;
-  /* display: grid; */
 }
-
+/* Container */
 .autocomplete__container {
   width: 50%;
 }
+/* Search Input */
 .autocomplete__search-input-container {
   position: relative;
   width: 100%;
@@ -22,24 +22,27 @@ body {
 .autocomplete__search-input {
   width: 100%;
   padding: 12px;
-  font-size: 1.1rem;
+  font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 1rem;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
   transition: border-color 0.3s ease;
+}
+.autocomplete__search-input::placeholder {
+  color: rgba(0, 0, 0, 0.5);
 }
 .autocomplete__search-input:focus {
   outline: none;
   border-color: #4a90e2;
   box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
 }
+/* Suggestions List */
 .autocomplete__popover {
   position: relative;
 }
 .autocomplete__suggestions-container {
   --container-radius: 1rem;
   --container-padding: 0.5rem;
-
   position: absolute;
   top: 0;
   left: 0;
@@ -55,20 +58,41 @@ body {
   max-height: 400px;
   overflow-y: auto;
 }
+.autocomplete__suggestions-relative-wrapper {
+  position: relative;
+  height: 100%;
+}
+/* Blur at bottom of suggestions list */
+.autocomplete__suggestions-relative-wrapper::after {
+  content: "";
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  background: linear-gradient(
+    to top,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.8) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  pointer-events: none; /* Allows clicking through the fade */
+}
 .autocomplete__suggestions {
   list-style-type: none;
   padding: 0;
   margin: 0;
 }
+/* Suggestion Item */
 .autocomplete__suggestion-item {
   cursor: pointer;
   border-radius: calc(var(--container-radius) - var(--container-padding));
   padding: 0.4rem;
 }
-.autocomplete__suggestion-item--focused {
+.autocomplete__suggestion-item.highlighted {
   background: #f4f4f5;
 }
-
+/* Render Items */
 .produce-item__container {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -119,7 +143,7 @@ body {
   color: rgba(0, 0, 0, 0.35);
 }
 
-/* UTILITY CLASSES */
+/* Utility Classes */
 .show {
   opacity: 1;
 }
