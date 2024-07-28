@@ -64,7 +64,7 @@ class AutoComplete<T extends SuggestionItem> {
       ".autocomplete__search-input"
     ) as HTMLElement;
     const suggestionsContainer = this.container.querySelector(
-      ".autocomplete__suggestions"
+      ".autocomplete__suggestions-container"
     ) as HTMLElement;
 
     // Initialize sub-component manager classes

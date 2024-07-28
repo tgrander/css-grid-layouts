@@ -22,6 +22,7 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
     eventEmitter: EventEmitter
   ) {
     this.container = container;
+    console.log("this.container :>> ", this.container);
     this.eventEmitter = eventEmitter;
     this.options = this.mergeDefaultOptions(options);
     this.init();
@@ -38,7 +39,12 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
     };
   }
 
-  public render(suggestions: T[], { open = true }: { open?: boolean } = {}) {
+  private init() {
+    this.createItems(this.options.defaultItems);
+    this.setupEventListeners();
+  }
+
+  public createItems(suggestions: T[]) {
     if (suggestions.length === 0) {
       return;
     }
@@ -55,23 +61,35 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
       li.addEventListener("mouseover", () => this.highlightItem(index));
       this.container.appendChild(li);
     });
-    if (open) this.open();
-  }
-
-  private init() {
-    this.render(this.options.defaultItems);
-    this.setupEventListeners();
   }
 
   private setupEventListeners() {
+    // Render default items on input clear
     this.eventEmitter.on(AutoCompleteEventType.InputClear, () =>
       this.render(this.options.defaultItems)
     );
+    // Open suggestions list on focus
+    this.eventEmitter.on(AutoCompleteEventType.InputFocus, () => {
+      console.log("input focus event");
+      this.open();
+    });
   }
 
   private handleItemClick(item: T, index: number) {
     this.eventEmitter.emit(AutoCompleteEventType.SuggestionSelected, item);
     this.currentSelected = index;
+  }
+
+  private getItemElements() {
+    const listElements = this.container.querySelectorAll(
+      "autocomplete__suggestion-item"
+    );
+    return Array.from(listElements) as HTMLElement[];
+  }
+
+  public render(suggestions: T[]) {
+    this.createItems(suggestions);
+    this.open();
   }
 
   public open() {
@@ -86,8 +104,7 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
   }
 
   public highlightItem(index: number) {
-    const items = Array.from(this.container.children) as HTMLElement[];
-    items.forEach((item, i) => {
+    this.getItemElements().forEach((item, i) => {
       if (index === i) {
         item.classList.add("highlighted");
       } else {
