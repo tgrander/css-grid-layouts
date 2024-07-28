@@ -29,7 +29,14 @@ import "@styles/autocomplete/basic.css";
       </div>
 
       <div class="autocomplete__popover" aria-hidden="true">
-        <div class="autocomplete__suggestions-container show"></div>
+        <div class="autocomplete__suggestions-container show">
+          <ul
+            class="autocomplete__suggestions"
+            id="autocomplete__suggestions-list"
+            role="listbox"
+          >
+          </ul>
+        </div>
       </div>
     </main>
   </body><script src="../../scripts/autocomplete/basic/init.ts"></script>

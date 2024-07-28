@@ -6,5 +6,6 @@ export enum AutoCompleteEventType {
   InputBlur = "input:blur",
   SuggestionsFetched = "data:fetched",
   SuggestionSelected = "suggestion:select",
+  SuggestionHighlight = "suggestion:highlight",
   Error = "data:error",
 }

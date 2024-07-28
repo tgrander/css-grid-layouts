@@ -55,6 +55,11 @@ body {
   max-height: 400px;
   overflow-y: auto;
 }
+.autocomplete__suggestions {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
 .autocomplete__suggestion-item {
   cursor: pointer;
   border-radius: calc(var(--container-radius) - var(--container-padding));
