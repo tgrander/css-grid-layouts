@@ -1,3 +1,10 @@
+export interface AutoCompleteState<T extends SuggestionItem> {
+  isLoading: boolean;
+  error: Error | null;
+  suggestions: T[];
+  selectedIndex: number;
+}
+
 export interface SuggestionItem {
   id: string | number; // Unique identifier for the item
   value: string; // The main value to be displayed and used for filtering
