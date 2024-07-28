@@ -3,6 +3,8 @@ import type {
   SuggestionItem,
 } from "@scripts/autocomplete/basic/types";
 
+import type { EventEmitter } from "@lib/event-emitter";
+
 export enum AutoCompleteEventType {
   StateChanged = "state:change",
   InputChange = "input:change",
@@ -30,9 +32,12 @@ export type AutoCompleteEventMap<T extends SuggestionItem> = {
     element: HTMLElement;
   };
   [AutoCompleteEventType.SuggestionHighlight]: {
-    item: T;
     index: number;
     element: HTMLElement;
   };
   [AutoCompleteEventType.Error]: Error;
 };
+
+export type AutoCompleteEventEmitter<T extends SuggestionItem> = EventEmitter<
+  AutoCompleteEventMap<T>
+>;

@@ -1,5 +1,5 @@
+import type { AutoCompleteEventEmitter } from "../../events";
 import { AutoCompleteEventType } from "../../events";
-import type { EventEmitter } from "@lib/event-emitter";
 import type { SuggestionItem } from "../types";
 
 export interface SuggestionsOptions<T extends SuggestionItem> {
@@ -13,16 +13,16 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
   private options: Required<SuggestionsOptions<T>>;
   private isOpen: boolean = false;
   private currentHighlight: number = 0;
-  private currentSelected: number | null = null;
-  private eventEmitter: EventEmitter;
+  private currentSelected: number = -1;
+  private currentSelectedElement: HTMLElement | null = null;
+  private eventEmitter: AutoCompleteEventEmitter<T>;
 
   constructor(
     container: HTMLElement,
     options: SuggestionsOptions<T>,
-    eventEmitter: EventEmitter
+    eventEmitter: AutoCompleteEventEmitter<T>
   ) {
     this.container = container;
-    console.log("this.container :>> ", this.container);
     this.eventEmitter = eventEmitter;
     this.options = this.mergeDefaultOptions(options);
     this.init();
@@ -70,23 +70,31 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
     );
     // Open suggestions list on focus
     this.eventEmitter.on(AutoCompleteEventType.InputFocus, () => {
-      console.log("input focus event");
       this.open();
     });
   }
 
-  private handleItemClick(item: T, index: number, el: HTMLElement) {
+  private handleItemClick(item: T, index: number, element: HTMLElement) {
+    // Emit event
+    this.eventEmitter.emit(AutoCompleteEventType.SuggestionSelected, {
+      item,
+      index,
+      element,
+    });
+    // Remove check icon from prev selected and add to new
+    if (this.currentSelectedElement)
+      this.removeCheckIconFromItem(this.currentSelectedElement);
+    this.addCheckIconToItem(element);
+    // Update state
     this.currentSelected = index;
-    this.addCheckIcon(this.currentSelected);
-    this.eventEmitter.emit(AutoCompleteEventType.SuggestionSelected, item);
+    this.currentSelectedElement = element;
   }
 
-  private addCheckIcon(index: number) {
-    const li = this.container.querySelector(`#${getItemId(index)}`);
-    if (li) {
-      const checkIcon = document.createElement("span");
-      checkIcon.classList.add("icon", "icon-selected");
-      checkIcon.innerHTML = `
+  private addCheckIconToItem(itemElement: HTMLElement) {
+    if (!itemElement) return;
+    const iconWrapper = document.createElement("span");
+    iconWrapper.classList.add("icon", "icon-selected");
+    iconWrapper.innerHTML = `
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -102,14 +110,17 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
           <path d="M20 6 9 17l-5-5" />
         </svg>
       `;
-      li.appendChild(checkIcon);
-    }
+    itemElement.appendChild(iconWrapper);
   }
 
-  private removeCheckIcon(index: number) {
-    const li = this.container.querySelector(`#${getItemId(index)}`);
+  private removeCheckIconFromItem(itemElement: HTMLElement) {
+    const checkIcon = itemElement.querySelector(".icon-selected");
+    checkIcon?.remove();
   }
 
+  /**
+   * Public Methods
+   */
   public render(suggestions: T[]) {
     this.createItems(suggestions);
     this.open();
@@ -121,7 +132,7 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
       this.container.setAttribute("aria-hidden", "false");
 
       this.isOpen = true;
-      this.highlightItem(this.currentHighlight ?? this.currentHighlight);
+      this.highlightItem(this.currentSelected ?? this.currentHighlight);
     }
   }
 
@@ -144,7 +155,10 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
     });
 
     this.currentHighlight = index;
-    this.eventEmitter.emit(AutoCompleteEventType.SuggestionHighlight, index);
+    this.eventEmitter.emit(AutoCompleteEventType.SuggestionHighlight, {
+      index,
+      element: items[index],
+    });
   }
 }
 
