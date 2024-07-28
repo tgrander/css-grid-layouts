@@ -1,16 +1,16 @@
-import type {
-  DataProviderOptions,
-  InputOptions,
-  SuggestionsOptions,
-} from "./autocomplete";
 import {
   AutoCompleteDataProvider,
   AutoCompleteInputManager,
   AutoCompleteSuggestionsManager,
 } from "./autocomplete/index";
+import type {
+  DataProviderOptions,
+  InputOptions,
+  SuggestionsOptions,
+} from "./autocomplete/";
 
-import { EventEmitter } from "@lib/event-emitter";
 import { AutoCompleteEventType } from "../events";
+import { EventEmitter } from "@lib/event-emitter";
 import type { SuggestionItem } from "./types";
 
 interface AutoCompleteOptions<T extends SuggestionItem> {

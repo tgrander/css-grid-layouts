@@ -1,10 +1,11 @@
-import type { EventEmitter } from "@lib/event-emitter";
 import { AutoCompleteEventType } from "../../events";
+import type { EventEmitter } from "@lib/event-emitter";
 import type { SuggestionItem } from "../types";
 
 export interface SuggestionsOptions<T extends SuggestionItem> {
   renderItem?: (item: T) => string;
   maxItems?: number;
+  defaultItems?: T[];
 }
 
 export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
@@ -22,6 +23,7 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
     this.container = container;
     this.eventEmitter = eventEmitter;
     this.options = this.mergeDefaultOptions(options);
+    this.init();
   }
 
   private mergeDefaultOptions(
@@ -30,11 +32,15 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
     return {
       renderItem: (item: T) => `<div>${item.value}</div>`,
       maxItems: 50,
+      defaultItems: [],
       ...options,
     };
   }
 
-  public render(suggestions: T[]) {
+  public render(suggestions: T[], { open = true }: { open?: boolean } = {}) {
+    if (suggestions.length === 0) {
+      return;
+    }
     this.container.innerHTML = "";
     suggestions.slice(0, this.options.maxItems).forEach((item, index) => {
       const li = document.createElement("li");
@@ -48,8 +54,18 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
       li.addEventListener("mouseover", () => this.highlightItem(index));
       this.container.appendChild(li);
     });
+    if (open) this.open();
+  }
 
-    this.open();
+  private init() {
+    this.render(this.options.defaultItems);
+    this.setupEventListeners();
+  }
+
+  private setupEventListeners() {
+    this.eventEmitter.on(AutoCompleteEventType.InputClear, () =>
+      this.render(this.options.defaultItems)
+    );
   }
 
   private handleItemClick(item: T) {
