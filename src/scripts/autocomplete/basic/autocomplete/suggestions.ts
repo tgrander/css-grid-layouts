@@ -80,11 +80,8 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
     this.currentSelected = index;
   }
 
-  private getItemElements() {
-    const listElements = this.container.querySelectorAll(
-      "autocomplete__suggestion-item"
-    );
-    return Array.from(listElements) as HTMLElement[];
+  private getItems() {
+    return Array.from(this.container.children) as HTMLElement[];
   }
 
   public render(suggestions: T[]) {
@@ -111,7 +108,7 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
   }
 
   public highlightItem(index: number) {
-    this.getItemElements().forEach((item, i) => {
+    this.getItems().forEach((item, i) => {
       if (index === i) {
         item.classList.add("highlighted");
       } else {
