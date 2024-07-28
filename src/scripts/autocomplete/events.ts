@@ -22,9 +22,9 @@ export type AutoCompleteEventMap<T extends SuggestionItem> = {
 } & {
   [AutoCompleteEventType.StateChanged]: AutoCompleteState<T>;
   [AutoCompleteEventType.InputChange]: string;
-  [AutoCompleteEventType.InputClear]: undefined;
-  [AutoCompleteEventType.InputFocus]: undefined;
-  [AutoCompleteEventType.InputBlur]: undefined;
+  [AutoCompleteEventType.InputClear]: void;
+  [AutoCompleteEventType.InputFocus]: void;
+  [AutoCompleteEventType.InputBlur]: void;
   [AutoCompleteEventType.SuggestionsFetched]: T[];
   [AutoCompleteEventType.SuggestionSelected]: {
     item: T;

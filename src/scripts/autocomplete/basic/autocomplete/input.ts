@@ -1,20 +1,21 @@
-import { AutoCompleteEventType } from "@scripts/autocomplete/events";
-import type { EventEmitter } from "@lib/event-emitter";
+import type { AutoCompleteEventEmitter } from "../../events";
+import { AutoCompleteEventType } from "../../events";
+import type { SuggestionItem } from "../types";
 
 export interface InputOptions {
   placeholder?: string;
   minChars?: number;
 }
 
-export class AutoCompleteInputManager {
+export class AutoCompleteInputManager<T extends SuggestionItem> {
   private input: HTMLInputElement;
   private options: Required<InputOptions>;
-  private eventEmitter: EventEmitter;
+  private eventEmitter: AutoCompleteEventEmitter<T>;
 
   constructor(
     container: HTMLElement,
     options: InputOptions,
-    eventEmitter: EventEmitter
+    eventEmitter: AutoCompleteEventEmitter<T>
   ) {
     this.input = container.closest("input") as HTMLInputElement;
     this.eventEmitter = eventEmitter;

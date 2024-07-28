@@ -1,5 +1,5 @@
+import type { AutoCompleteEventEmitter } from "../../events";
 import { AutoCompleteEventType } from "../../events";
-import type { EventEmitter } from "@lib/event-emitter";
 import type { SuggestionItem } from "../types";
 
 export type DataSourceFunction<T extends SuggestionItem> = (
@@ -14,9 +14,12 @@ export interface DataProviderOptions<T extends SuggestionItem> {
 export class AutoCompleteDataProvider<T extends SuggestionItem> {
   private options: Required<DataProviderOptions<T>>;
   private debounceTimer: ReturnType<typeof setTimeout> | null = null;
-  private eventEmitter: EventEmitter;
+  private eventEmitter: AutoCompleteEventEmitter<T>;
 
-  constructor(options: DataProviderOptions<T>, eventEmitter: EventEmitter) {
+  constructor(
+    options: DataProviderOptions<T>,
+    eventEmitter: AutoCompleteEventEmitter<T>
+  ) {
     this.options = {
       debounceTime: 100,
       ...options,
@@ -37,7 +40,7 @@ export class AutoCompleteDataProvider<T extends SuggestionItem> {
           suggestions
         );
       } catch (error) {
-        this.eventEmitter.emit(AutoCompleteEventType.Error, error);
+        this.eventEmitter.emit(AutoCompleteEventType.Error, error as Error);
       }
     }, this.options.debounceTime);
   }
