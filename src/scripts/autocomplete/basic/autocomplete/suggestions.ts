@@ -12,7 +12,8 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
   private container: HTMLElement;
   private options: Required<SuggestionsOptions<T>>;
   private isOpen: boolean = false;
-  private currentHighlight: number = -1;
+  private currentHighlight: number = 0;
+  private currentSelected: number | null = null;
   private eventEmitter: EventEmitter;
 
   constructor(
@@ -50,7 +51,7 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
       li.dataset.index = index.toString();
       li.innerHTML = this.options.renderItem(item);
 
-      li.addEventListener("click", () => this.handleItemClick(item));
+      li.addEventListener("click", () => this.handleItemClick(item, index));
       li.addEventListener("mouseover", () => this.highlightItem(index));
       this.container.appendChild(li);
     });
@@ -68,20 +69,20 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
     );
   }
 
-  private handleItemClick(item: T) {
+  private handleItemClick(item: T, index: number) {
     this.eventEmitter.emit(AutoCompleteEventType.SuggestionSelected, item);
+    this.currentSelected = index;
   }
 
   public open() {
     if (!this.isOpen) this.container.classList.add("show");
     this.isOpen = true;
-    this.highlightItem(0);
+    this.highlightItem(this.currentHighlight ?? this.currentHighlight);
   }
 
   public close() {
     this.container.classList.remove("show");
     this.isOpen = false;
-    this.highlightItem(-1);
   }
 
   public highlightItem(index: number) {
