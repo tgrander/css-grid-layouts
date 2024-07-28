@@ -1,5 +1,5 @@
-import { AutoCompleteEventType } from "../../events";
 import type { EventEmitter } from "@lib/event-emitter";
+import { AutoCompleteEventType } from "../../events";
 import type { SuggestionItem } from "../types";
 
 export interface SuggestionsOptions<T extends SuggestionItem> {

@@ -1,14 +1,13 @@
-import type { ProduceItem } from "@data/produce";
-import produceItems from "@data/produce";
-import html from "noop-tag";
 import AutoComplete from "./autocomplete";
+import type { ProduceItem } from "@data/produce";
+import type { SuggestionItem } from "./types";
+import html from "noop-tag";
+import produceItems from "@data/produce";
 
-// Container Element
 const container = document.querySelector(
   ".autocomplete__container"
 ) as HTMLElement;
 
-// Data Source Function
 const produceDataSource = async (query: string): Promise<ProduceItem[]> => {
   // Simulate network delay
   await new Promise((resolve) => setTimeout(resolve, 100));
@@ -22,7 +21,18 @@ const produceDataSource = async (query: string): Promise<ProduceItem[]> => {
   );
 };
 
-const autocomplete = new AutoComplete<ProduceItem>(container, {
+interface Produce extends SuggestionItem {
+  data: ProduceItem;
+}
+
+const items: Produce[] = produceItems.map((produce) => ({
+  id: produce.id,
+  value: produce.name,
+  label: produce.name,
+  data: produce,
+}));
+
+const autocomplete = new AutoComplete<Produce>(container, {
   data: {
     dataSource: produceDataSource,
   },
@@ -31,13 +41,13 @@ const autocomplete = new AutoComplete<ProduceItem>(container, {
   },
   suggestions: {
     defaultItems: produceItems,
-    renderItem: (item) =>
+    renderItem: (item: Produce) =>
       html`
         <div class="produce-item__container">
-          <div class="produce-item__image ">${item.emoji}</div>
+          <div class="produce-item__image ">${item.data.emoji}</div>
           <div class="produce-item__data">
-            <p class="produce-item__name">${item.name}</p>
-            <p class="produce-item__category">${item.category}</p>
+            <p class="produce-item__name">${item.data.name}</p>
+            <p class="produce-item__category">${item.data.category}</p>
           </div>
         </div>
       `,
