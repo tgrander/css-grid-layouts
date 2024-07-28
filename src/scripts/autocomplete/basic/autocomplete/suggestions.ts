@@ -93,14 +93,21 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
   }
 
   public open() {
-    if (!this.isOpen) this.container.classList.add("show");
-    this.isOpen = true;
-    this.highlightItem(this.currentHighlight ?? this.currentHighlight);
+    if (!this.isOpen) {
+      this.container.classList.add("show");
+      this.container.setAttribute("aria-hidden", "false");
+
+      this.isOpen = true;
+      this.highlightItem(this.currentHighlight ?? this.currentHighlight);
+    }
   }
 
   public close() {
-    this.container.classList.remove("show");
-    this.isOpen = false;
+    if (this.isOpen) {
+      this.container.classList.remove("show");
+      this.container.setAttribute("aria-hidden", "true");
+      this.isOpen = false;
+    }
   }
 
   public highlightItem(index: number) {

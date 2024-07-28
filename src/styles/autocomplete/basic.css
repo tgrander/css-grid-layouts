@@ -59,6 +59,7 @@ body {
   max-height: 400px;
   overflow-y: auto;
   opacity: 0;
+  pointer-events: none;
 }
 .autocomplete__suggestions-relative-wrapper {
   position: relative;
@@ -146,4 +147,5 @@ body {
 }
 .show {
   opacity: 1;
+  pointer-events: auto;
 }
