@@ -1,6 +1,7 @@
 import {
   AutoCompleteDataProvider,
   AutoCompleteInputManager,
+  AutoCompleteKeypressManager,
   AutoCompleteSuggestionsManager,
 } from "./autocomplete/index";
 import type { AutoCompleteState, SuggestionItem } from "./types";
@@ -23,7 +24,7 @@ interface AutoCompleteOptions<T extends SuggestionItem> {
 class AutoComplete<T extends SuggestionItem> {
   private container: HTMLElement;
   private options: Required<AutoCompleteOptions<T>>;
-  private inputManager!: AutoCompleteInputManager;
+  private inputManager!: AutoCompleteInputManager<T>;
   private suggestionsManager!: AutoCompleteSuggestionsManager<T>;
   private dataProvider!: AutoCompleteDataProvider<T>;
   private eventEmitter: EventEmitter<AutoCompleteEventMap<T>>;
@@ -79,6 +80,8 @@ class AutoComplete<T extends SuggestionItem> {
       this.options.data,
       this.eventEmitter
     );
+    // Key Press
+    new AutoCompleteKeypressManager(inputContainer, this.eventEmitter);
   }
 
   private setupEventListeners() {

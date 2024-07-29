@@ -8,6 +8,13 @@ export interface SuggestionsOptions<T extends SuggestionItem> {
   defaultItems?: T[];
 }
 
+interface State {
+  isOpen: boolean;
+  currentHighlight: number;
+  currentSelected: number;
+  currentSelectedElement: HTMLElement | null;
+}
+
 export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
   private container: HTMLElement;
   private options: Required<SuggestionsOptions<T>>;
@@ -159,6 +166,15 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
       index,
       element: items[index],
     });
+  }
+
+  public state(): State {
+    return {
+      isOpen: this.isOpen,
+      currentHighlight: this.currentHighlight,
+      currentSelected: this.currentSelected,
+      currentSelectedElement: this.currentSelectedElement,
+    };
   }
 }
 
