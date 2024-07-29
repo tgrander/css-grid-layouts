@@ -2,15 +2,24 @@ import type { ColumnConfig, TableData } from "./editable-table";
 
 import EditableTable from "./editable-table";
 
-const columns = ["First Name", "Last Name", "Email", "Job Title"];
-const columnsConfig: ColumnConfig[] = columns.map((col) => ({
-  label: col,
-  key: col
-    .trim()
-    .split(" ")
-    .map((c) => c.toLocaleLowerCase())
-    .join("-"),
-}));
+const columnsConfig: ColumnConfig[] = [
+  {
+    key: "firstName",
+    label: "First Name",
+  },
+  {
+    key: "lastName",
+    label: "Last Name",
+  },
+  {
+    key: "email",
+    label: "Email",
+  },
+  {
+    key: "jobTitle",
+    label: "Job Title",
+  },
+];
 
 const data: TableData[] = [
   {

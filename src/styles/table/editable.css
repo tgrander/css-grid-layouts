@@ -43,6 +43,9 @@ table#editableTable {
   width: 100%;
   border-collapse: collapse;
 }
+thead {
+  background: var(--warm-gray-200);
+}
 th,
 td {
   border: 1px solid var(--warm-gray-300);

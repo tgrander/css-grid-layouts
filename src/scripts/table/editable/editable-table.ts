@@ -20,15 +20,26 @@ export interface TableData {
 }
 
 export interface ColumnConfig {
-  key: string;
+  key: keyof TableData;
   label: string;
-  // sortable?: boolean;
-  // filterable?: boolean;
 }
 
 export interface TableConfig {
   columns: ColumnConfig[];
   data: TableData[];
+}
+
+interface CellFormat {
+  bold?: boolean;
+  italic?: boolean;
+  underline?: boolean;
+  textColor?: boolean;
+  backgroundColor?: boolean;
+}
+
+interface CellState {
+  value: string;
+  format: CellFormat;
 }
 
 export default class EditableTable {
@@ -42,8 +53,54 @@ export default class EditableTable {
     this.initManagers();
   }
 
-  private initManagers() {
+  private initManagers(): void {
     this.viewManager = new TableViewManager(this.container, this.config);
+  }
+}
+
+class TableStateManager {
+  private cellStates!: CellState[][];
+  private columns: ColumnConfig[];
+
+  constructor(config: TableConfig) {
+    this.columns = config.columns;
+    this.initCellStates(config);
+  }
+
+  private initCellStates(config: TableConfig) {
+    this.cellStates = config.data.map((row) =>
+      this.columns.map((column) => ({
+        value: row[column.key],
+        format: {},
+      }))
+    );
+  }
+
+  public getColumns() {
+    return this.columns;
+  }
+
+  public getCellStates() {
+    return this.cellStates;
+  }
+
+  public updateCellValue(
+    rowIndex: number,
+    cellIndex: number,
+    newValue: string
+  ) {
+    this.cellStates[rowIndex][cellIndex].value = newValue;
+  }
+
+  public updateCellFormat(
+    rowIndex: number,
+    cellIndex: number,
+    format: Partial<CellFormat>
+  ) {
+    this.cellStates[rowIndex][cellIndex].format = {
+      ...this.cellStates[rowIndex][cellIndex].format,
+      ...format,
+    };
   }
 }
 
@@ -58,11 +115,11 @@ class TableViewManager {
   }
 
   private init() {
-    this.createHeader();
+    this.createTableHeader();
     this.createTableBody();
   }
 
-  private createHeader() {
+  private createTableHeader() {
     const header = document.createElement("thead");
     header.classList.add("editableTable__header");
     const tr = document.createElement("tr");
@@ -86,9 +143,10 @@ class TableViewManager {
     this.config.data.forEach((rowData) => {
       const tr = document.createElement("tr");
       Object.values(rowData).forEach((value) => {
-        console.log("row data value :>> ", value);
         const td = document.createElement("td");
         td.textContent = value;
+        td.contentEditable = "true";
+
         tr.appendChild(td);
       });
       tBody.append(tr);
