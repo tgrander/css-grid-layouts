@@ -12,7 +12,7 @@ class EventEmitter {
 }
 
 export interface TableData {
-  id: number;
+  //   id: number;
   firstName: string;
   lastName: string;
   email: string;
@@ -86,6 +86,7 @@ class TableViewManager {
     this.config.data.forEach((rowData) => {
       const tr = document.createElement("tr");
       Object.values(rowData).forEach((value) => {
+        console.log("row data value :>> ", value);
         const td = document.createElement("td");
         td.textContent = value;
         tr.appendChild(td);
