@@ -1,0 +1,51 @@
+:root {
+  --warm-gray-50: #fafaf9;
+  --warm-gray-100: #f5f5f4;
+  --warm-gray-200: #e7e5e4;
+  --warm-gray-300: #d6d3d1;
+  --warm-gray-400: #a8a29e;
+  --warm-gray-500: #78716c;
+  --warm-gray-600: #57534e;
+  --warm-gray-700: #44403c;
+  --warm-gray-800: #292524;
+  --warm-gray-900: #1c1917;
+  --warm-gray-950: #0c0a09;
+
+  --gray-gradient: rgba(var(--warm-gray-200), 50%), #fff;
+}
+@font-face {
+  font-family: "Atkinson";
+  src: url("/fonts/atkinson-regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Atkinson";
+  src: url("/fonts/atkinson-bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  font-family: "Atkinson", sans-serif;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  background: linear-gradient(var(--gray-gradient)) no-repeat;
+  font-size: 100%;
+}
+
+table#editableTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+th,
+td {
+  border: 1px solid var(--warm-gray-300);
+  padding: 8px;
+  text-align: left;
+}

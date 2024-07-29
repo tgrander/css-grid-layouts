@@ -125,9 +125,7 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
     checkIcon?.remove();
   }
 
-  /**
-   * Public Methods
-   */
+  // Public Methods
   public render(suggestions: T[]) {
     this.createItems(suggestions);
     this.open();
@@ -137,10 +135,9 @@ export class AutoCompleteSuggestionsManager<T extends SuggestionItem> {
     if (!this.isOpen) {
       this.container.classList.add("show");
       this.container.setAttribute("aria-hidden", "false");
-
       this.isOpen = true;
-      this.highlightItem(this.currentSelected ?? this.currentHighlight);
     }
+    this.highlightItem(this.currentSelected ?? this.currentHighlight);
   }
 
   public close() {
