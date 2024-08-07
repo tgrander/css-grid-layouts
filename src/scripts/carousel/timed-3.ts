@@ -7,64 +7,92 @@ interface CarouselItem {
 interface CarouselConfig {
   //   items: CarouselItem[];
   infinite?: boolean;
+  autoplay?: boolean;
+  autoplayInterval?: number;
+}
+
+interface CarouselState {
+  currentIndex: number;
+  numberOfItems: number;
+  autoplay: boolean;
+  infinite: boolean;
 }
 
 class CarouselModel {
-  private currentIndex: number = 0;
-  private numberOfItems: number;
-  private infinite: boolean;
+  private state: CarouselState;
 
-  constructor(numberOfItems: number, infinite: boolean = true) {
-    this.numberOfItems = numberOfItems;
-    this.infinite = infinite;
+  constructor(config: Required<CarouselConfig>, numberOfItems: number) {
+    this.state = {
+      currentIndex: 0,
+      numberOfItems,
+      autoplay: config.autoplay ?? false,
+      infinite: config.infinite ?? true,
+    };
   }
 
   prev(): number {
     const index =
-      this.infinite && this.currentIndex === 0
-        ? this.numberOfItems - 1
-        : Math.max(0, this.currentIndex + 1);
+      this.state.infinite && this.state.currentIndex === 0
+        ? this.state.numberOfItems - 1
+        : Math.max(0, this.state.currentIndex - 1);
 
     return this.setCurrentIndex(index);
   }
 
   next(): number {
     const index =
-      this.infinite && this.currentIndex === this.numberOfItems - 1
+      this.state.infinite &&
+      this.state.currentIndex === this.state.numberOfItems - 1
         ? 0
-        : Math.min(this.numberOfItems - 1, this.currentIndex + 1);
+        : Math.min(this.state.numberOfItems - 1, this.state.currentIndex + 1);
 
     return this.setCurrentIndex(index);
   }
 
   setCurrentIndex(index: number): number {
     if (
-      this.currentIndex === index ||
+      this.state.currentIndex === index ||
       index < 0 ||
-      index >= this.numberOfItems
+      index >= this.state.numberOfItems
     ) {
-      return this.currentIndex;
+      return this.state.currentIndex;
     }
-    this.currentIndex = index;
-    return this.currentIndex;
+    this.state.currentIndex = index;
+    return this.state.currentIndex;
+  }
+
+  getState(): CarouselState {
+    return this.state;
+  }
+
+  get<K extends keyof CarouselState>(key: K): CarouselState[K] {
+    return this.state[key];
+  }
+
+  set<K extends keyof CarouselState>(key: K, value: CarouselState[K]) {
+    this.state[key] = value;
   }
 }
 
 class CarouselView {
   private container: HTMLElement;
   private config: Required<CarouselConfig>;
-  private track: HTMLElement;
-  private items: HTMLElement[];
-  private navPrevButton: HTMLElement;
-  private navNextButton: HTMLElement;
-  private pauseButton: HTMLElement;
-  private playButton: HTMLElement;
-  private indicatorDots: HTMLElement[];
+  private track!: HTMLElement;
+  private items!: HTMLElement[];
+  private navPrevButton!: HTMLElement;
+  private navNextButton!: HTMLElement;
+  private pauseButton!: HTMLElement;
+  private playButton!: HTMLElement;
+  private indicatorDots!: HTMLElement[];
 
   constructor(container: HTMLElement, config: Required<CarouselConfig>) {
     this.container = container;
     this.config = config;
 
+    this.init();
+  }
+
+  private init() {
     const track = this.container.querySelector(
       ".carousel__track"
     ) as HTMLElement;
@@ -116,6 +144,11 @@ class CarouselView {
     return this.items;
   }
 
+  toggleAutoPlayButton(isPlaying: boolean) {
+    this.pauseButton.classList.toggle("active", isPlaying === true);
+    this.playButton.classList.toggle("active", isPlaying === false);
+  }
+
   onNavButtonClick(callback: (direction: CarouselDirection) => void): void {
     this.navPrevButton.addEventListener("click", () => callback("prev"));
     this.navNextButton.addEventListener("click", () => callback("next"));
@@ -142,42 +175,77 @@ export class CarouselController {
   private model: CarouselModel;
   private view: CarouselView;
 
+  private autoplayTimer: ReturnType<typeof setInterval> | null = null;
+
   constructor(container: HTMLElement, config: CarouselConfig) {
     this.container = container;
     this.config = {
       infinite: true,
+      autoplay: true,
+      autoplayInterval: 5000,
       ...config,
     };
     this.view = new CarouselView(this.container, this.config);
-    this.model = new CarouselModel(
-      this.view.getItems().length,
-      this.config.infinite
-    );
+    this.model = new CarouselModel(this.config, this.view.getItems().length);
 
     this.init();
   }
 
   private init() {
     this.addEventListeners();
+    this.initAutoPlay();
   }
 
   private addEventListeners() {
-    this.view.onNavButtonClick((direction) =>
-      this.handleNavButtonClick(direction)
-    );
-    this.view.onIndicatorDotClick((index) =>
-      this.handleIndicatorDotClick(index)
-    );
+    this.view.onNavButtonClick(this.handleNavButtonClick.bind(this));
+    this.view.onIndicatorDotClick(this.handleIndicatorDotClick.bind(this));
+    this.view.onPauseButtonClick(this.handlePauseButtonClick.bind(this));
+    this.view.onPlayButtonClick(this.playAutoPlay.bind(this));
   }
 
   private handleNavButtonClick(direction: CarouselDirection) {
+    this.clearAutoPlayTimer();
+
     const index = direction === "prev" ? this.model.prev() : this.model.next();
     this.view.goToSlide(index);
+
+    this.initAutoPlay();
   }
 
   private handleIndicatorDotClick(index: number) {
     this.model.setCurrentIndex(index);
     this.view.goToSlide(index);
+  }
+
+  private playAutoPlay() {
+    this.clearAutoPlayTimer();
+
+    this.autoplayTimer = setInterval(() => {
+      this.view.goToSlide(this.model.next());
+    }, this.config.autoplayInterval);
+
+    this.view.toggleAutoPlayButton(this.autoplayTimer !== null);
+    this.model.set("autoplay", true);
+  }
+
+  private handlePauseButtonClick() {
+    this.clearAutoPlayTimer();
+    this.view.toggleAutoPlayButton(this.autoplayTimer === null);
+  }
+
+  private clearAutoPlayTimer() {
+    if (this.autoplayTimer) {
+      clearInterval(this.autoplayTimer);
+    }
+    if (this.model.get("autoplay") === true) {
+      this.model.set("autoplay", false);
+    }
+  }
+
+  private initAutoPlay() {
+    if (this.model.get("autoplay") === true) {
+      this.playAutoPlay();
+    }
   }
 }
 

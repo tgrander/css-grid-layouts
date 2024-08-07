@@ -72,11 +72,14 @@ button {
 .carousel__play-pause-btn {
   display: block;
   border-radius: 50%;
+  display: none;
+}
+.carousel__play-pause-btn.active {
+  display: block;
 }
 .carousel__play-pause-btn.pause {
 }
 .carousel__play-pause-btn.play {
-  display: none;
 }
 .carousel__play-pause > .icon {
   height: 100%;
