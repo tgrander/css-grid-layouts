@@ -1,0 +1,85 @@
+---
+import BaseHead from "@components/BaseHead.astro";
+import Header from "@components/Header.astro";
+import "@styles/carousel/timed-3.css";
+import { ChevronLeft, ChevronRight } from "lucide-astro";
+import { SITE_DESCRIPTION, SITE_TITLE } from "../../consts";
+---
+
+<html lang="en">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+  </head>
+  <body>
+    <Header />
+    <main id="app">
+      <div class="heading">
+        <h3>🖼️ Image Carousel</h3>
+        <p>Timed Vanilla JS Implementation (45 minutes)</p>
+      </div>
+
+      <section id="carousel__container">
+        <div class="carousel__track-wrapper">
+          <div class="carousel__track">
+            <div class="carousel__slide">
+              <img src="" alt="" class="carousel__img" />
+            </div>
+            <div class="carousel__slide">
+              <img src="" alt="" class="carousel__img" />
+            </div>
+            <div class="carousel__slide">
+              <img src="" alt="" class="carousel__img" />
+            </div>
+            <div class="carousel__slide">
+              <img src="" alt="" class="carousel__img" />
+            </div>
+            <div class="carousel__slide">
+              <img src="" alt="" class="carousel__img" />
+            </div>
+            <div class="carousel__slide">
+              <img src="" alt="" class="carousel__img" />
+            </div>
+          </div>
+        </div>
+
+        <div class="carousel__navigation-wrapper">
+          <div class="carousel__progress-wrapper">
+            <div class="carousel__pause-play">
+              <button class="carousel__pause">
+                <span class="carousel__pause-icon">
+                  <ChevronLeft />
+                </span>
+              </button>
+              <button class="carousel__play">
+                <span class="carousel__play-icon">
+                  <ChevronRight />
+                </span>
+              </button>
+            </div>
+
+            <div class="carousel__nav-dots-wrapper">
+              <div class="carousel__dot" role="button"></div>
+              <div class="carousel__dot" role="button"></div>
+              <div class="carousel__dot" role="button"></div>
+              <div class="carousel__dot" role="button"></div>
+              <div class="carousel__dot" role="button"></div>
+            </div>
+          </div>
+
+          <div class="carousel__nav-buttons-wrapper">
+            <button class="carousel__nav-prev">
+              <span class="carousel__nav-prev-icon">
+                <ChevronLeft />
+              </span>
+            </button>
+            <button class="carousel__nav-next">
+              <span class="carousel__nav-next-icon">
+                <ChevronRight />
+              </span>
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body><script src="../../scripts/carousel/timed-3.ts"></script>
+</html>

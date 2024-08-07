@@ -101,7 +101,7 @@ const data: TableData[] = [
   },
 ];
 
-const container = document.getElementById("editableTable") as HTMLElement;
+const container = document.getElementById("table-container") as HTMLElement;
 
 const table = new EditableTable(container, {
   columns: columnsConfig,

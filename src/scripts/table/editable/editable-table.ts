@@ -5,12 +5,6 @@ enum TableEventType {
   CellKeypressEnter = "cell:keypress:enter",
 }
 
-class EventEmitter {
-  private on(): void {}
-  private emit(): void {}
-  private off(): void {}
-}
-
 export interface TableData {
   //   id: number;
   firstName: string;
@@ -33,8 +27,8 @@ interface CellFormat {
   bold?: boolean;
   italic?: boolean;
   underline?: boolean;
-  textColor?: boolean;
-  backgroundColor?: boolean;
+  textColor?: string;
+  backgroundColor?: string;
 }
 
 interface CellState {
@@ -45,17 +39,23 @@ interface CellState {
 export default class EditableTable {
   private container: HTMLElement;
   private config: Required<TableConfig>;
+  private stateManager: TableStateManager;
   private viewManager: TableViewManager;
 
   constructor(container: HTMLElement, config: TableConfig) {
     this.container = container;
     this.config = config;
-    this.initManagers();
+    this.stateManager = new TableStateManager(this.config);
+    this.viewManager = new TableViewManager(this.container, this.stateManager);
+
+    this.init();
   }
 
-  private initManagers(): void {
-    this.viewManager = new TableViewManager(this.container, this.config);
+  private init() {
+    this.viewManager.render();
   }
+
+  private attachEventListeners() {}
 }
 
 class TableStateManager {
@@ -106,52 +106,88 @@ class TableStateManager {
 
 class TableViewManager {
   private container: HTMLElement;
-  private config: TableConfig;
+  private stateManager: TableStateManager;
+  private cellMap: Map<string, HTMLTableCellElement> = new Map();
 
-  constructor(container: HTMLElement, config: TableConfig) {
+  constructor(container: HTMLElement, stateManager: TableStateManager) {
     this.container = container;
-    this.config = config;
-    this.init();
+    this.stateManager = stateManager;
   }
 
-  private init() {
-    this.createTableHeader();
-    this.createTableBody();
+  public render() {
+    this.container.innerHTML = "";
+    this.createTable();
   }
 
-  private createTableHeader() {
-    const header = document.createElement("thead");
-    header.classList.add("editableTable__header");
-    const tr = document.createElement("tr");
+  private createTable() {
+    const table = document.createElement("table") as HTMLTableElement;
+    table.classList.add("editable-table");
+    this.createTableHeader(table);
+    this.createTableBody(table);
+    this.container.appendChild(table);
+  }
 
-    this.config.columns.forEach((column) => {
+  private createTableHeader(table: HTMLTableElement) {
+    const thead = document.createElement("thead");
+    const headerRow = document.createElement("tr");
+    this.stateManager.getColumns().forEach((column) => {
       const th = document.createElement("th");
       th.textContent = column.label;
-      th.dataset.key = column.key;
-      th.scope = "col";
-      tr.appendChild(th);
+      headerRow.appendChild(th);
     });
-
-    header.appendChild(tr);
-    this.container.appendChild(header);
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
   }
 
-  private createTableBody() {
-    const tBody = document.createElement("tbody");
-    tBody.classList.add("editableTable__body");
-
-    this.config.data.forEach((rowData) => {
+  private createTableBody(table: HTMLTableElement) {
+    const tbody = document.createElement("tbody");
+    const cellStates = this.stateManager.getCellStates();
+    cellStates.forEach((row, rowIndex) => {
       const tr = document.createElement("tr");
-      Object.values(rowData).forEach((value) => {
-        const td = document.createElement("td");
-        td.textContent = value;
-        td.contentEditable = "true";
-
+      row.forEach((cellState, cellIndex) => {
+        const td = this.createCell(cellState, rowIndex, cellIndex);
         tr.appendChild(td);
       });
-      tBody.append(tr);
+      tbody.appendChild(tr);
     });
+    table.appendChild(tbody);
+  }
 
-    this.container.appendChild(tBody);
+  private createCell(
+    cellState: CellState,
+    rowIndex: number,
+    cellIndex: number
+  ) {
+    const td = document.createElement("td");
+    td.textContent = cellState.value;
+    td.contentEditable = "true";
+    this.applyCellFormat(td, cellState.format);
+    // Add td ref to cellMap
+    this.cellMap.set(this.getCellMapKey(rowIndex, cellIndex), td);
+
+    return td;
+  }
+
+  private applyCellFormat(td: HTMLTableCellElement, format: CellFormat) {
+    if (format.bold) td.style.fontWeight = "bold";
+    if (format.italic) td.style.fontStyle = "italic";
+    if (format.underline) td.style.textDecoration = "underline";
+    if (format.textColor) td.style.color = format.textColor;
+    if (format.backgroundColor)
+      td.style.backgroundColor = format.backgroundColor;
+  }
+
+  public updateCell(rowIndex: number, cellIndex: number): void {
+    const cellStates = this.stateManager.getCellStates();
+    const cell = cellStates[rowIndex][cellIndex];
+    const td = this.cellMap.get(this.getCellMapKey(rowIndex, cellIndex));
+    if (td) {
+      td.textContent = cell.value;
+      this.applyCellFormat(td, cell.format);
+    }
+  }
+
+  private getCellMapKey(rowIndex: number, cellIndex: number) {
+    return `${rowIndex}-${cellIndex}`;
   }
 }

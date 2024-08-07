@@ -39,7 +39,7 @@ body {
   font-size: 100%;
 }
 
-table#editableTable {
+table {
   width: 100%;
   border-collapse: collapse;
 }

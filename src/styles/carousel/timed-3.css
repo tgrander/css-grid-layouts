@@ -1,0 +1,113 @@
+html,
+body {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+body {
+  min-height: 100dvh;
+}
+button {
+  border: none;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+#carousel__container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  height: 400px;
+  display: grid;
+  grid-template-rows: 1fr max-content;
+  row-gap: 1rem;
+  margin: 0 auto;
+}
+
+.carousel__track-wrapper {
+  position: relative;
+  overflow-x: clip;
+  height: 100%;
+}
+
+.carousel__track {
+  position: relative;
+  height: 100%;
+  transition: transform ease-in-out 300ms;
+}
+
+.carousel__slide {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  border-radius: 12px;
+  /* background: rgba(255, 255, 255, 0.1); */
+  transition: all ease-in-out 800ms;
+  /* box-shadow: 0px 0px 6px #d5cbca, 0px 0px 6px #ffffff; */
+}
+
+.carousel__img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.carousel__navigation-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.carousel__progress-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.carousel__play-pause-wrapper {
+  display: flex;
+  align-items: center;
+}
+.carousel__play-pause-btn {
+  display: block;
+  border-radius: 50%;
+}
+.carousel__play-pause-btn.pause {
+}
+.carousel__play-pause-btn.play {
+  display: none;
+}
+.carousel__play-pause > .icon {
+  height: 100%;
+  width: 100%;
+}
+
+.carousel__nav-dots-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.carousel__dot {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: lightgray;
+}
+.carousel__dot:hover:not(.active) {
+  background: darkgray;
+}
+.carousel__dot.active {
+  background-color: darkorchid;
+}
+
+.carousel__nav-buttons-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.carousel__nav-button {
+  border-radius: 50%;
+}
