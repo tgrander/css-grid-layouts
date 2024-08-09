@@ -10,6 +10,10 @@ body {
   grid-template-columns: 1fr minmax(0, 80%) 1fr;
   grid-template-areas: ". carousel .";
 }
+button {
+  border: none;
+  box-shadow: none;
+}
 
 .carousel-container {
   grid-area: carousel;
@@ -57,4 +61,18 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 0.25rem;
+}
+.carousel-dot {
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+.carousel-dot:not(.active):hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+.carousel-dot.active {
+  background: rgba(0, 0, 0, 0.3);
 }
