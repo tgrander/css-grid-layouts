@@ -55,13 +55,11 @@ export class Carousel {
     ) {
       return;
     }
-    // negative value = move carousel left (next), positive value = move right (prev)
-    const transitionDirection = index > this.currentIndex ? -1 : 1;
+    const totalSlides = this.slides.length;
+    const normalizedIndex = (index + totalSlides) % totalSlides;
 
     this.currentIndex = index;
-    this.carousel.style.transform = `translate(${
-      100 * index * transitionDirection
-    }%)`;
+    this.carousel.style.transform = `translate(-${100 * normalizedIndex}%)`;
   }
 }
 
@@ -70,5 +68,5 @@ document.addEventListener("DOMContentLoaded", () => {
     ".carousel-container"
   ) as HTMLElement;
 
-  const carousel = new Carousel(containerElement);
+  new Carousel(containerElement);
 });
