@@ -4,9 +4,11 @@ export class Carousel {
   private navNextButton: HTMLElement;
   private navPrevButton: HTMLElement;
   private slides: HTMLElement[];
+  private autoplayButton: HTMLElement;
   private navDots!: HTMLElement[];
   private currentIndex = 0;
-  private autoplay = true;
+  private isAutoPlaying = true;
+  private wasAutoPlayingBeforeMouseEnter = true;
   private autoplayTimer: ReturnType<typeof setInterval> | null = null;
 
   constructor(container: HTMLElement) {
@@ -21,6 +23,9 @@ export class Carousel {
     this.slides = Array.from(
       this.container.querySelectorAll(".carousel-slide")
     ) as HTMLElement[];
+    this.autoplayButton = this.container.querySelector(
+      ".carousel-autoplay-button"
+    ) as HTMLElement;
 
     this.init();
   }
@@ -29,6 +34,7 @@ export class Carousel {
     this.navDots = this.createDotsMarkup();
     this.updateActiveDot();
     this.startAutoPlay();
+    this.updateAutoPlayButtonText();
     this.addEventListeners();
   }
 
@@ -54,13 +60,21 @@ export class Carousel {
   private addEventListeners() {
     this.createCarouselEventListeners();
     this.addNavButtonsEventListeners();
+    this.autoplayButton.addEventListener(
+      "click",
+      this.handleAutoplayButtonClick.bind(this)
+    );
   }
 
   private createCarouselEventListeners() {
-    // On mouse enter, stop auto play
-    // On mouse leave, start auto play
-    this.carousel.addEventListener("mouseenter", this.stopAutoPlay.bind(this));
-    this.carousel.addEventListener("mouseleave", this.startAutoPlay.bind(this));
+    this.carousel.addEventListener(
+      "mouseenter",
+      this.handleMouseEnter.bind(this)
+    );
+    this.carousel.addEventListener(
+      "mouseleave",
+      this.handleMouseLeave.bind(this)
+    );
   }
 
   private addNavButtonsEventListeners(): void {
@@ -107,11 +121,8 @@ export class Carousel {
   }
 
   private startAutoPlay() {
-    // On initial load,
-    // If autoplay == true, set an interval that transitions to next slide every X ms
-    if (this.autoplay) {
+    if (this.isAutoPlaying) {
       this.stopAutoPlay();
-
       this.autoplayTimer = setInterval(() => {
         this.goToNext();
       }, 2000);
@@ -121,7 +132,32 @@ export class Carousel {
   private stopAutoPlay() {
     if (this.autoplayTimer) {
       clearInterval(this.autoplayTimer);
+      this.autoplayTimer = null;
     }
+  }
+
+  private updateAutoPlayButtonText() {
+    this.autoplayButton.textContent = this.isAutoPlaying ? "Pause" : "Play";
+  }
+
+  private handleAutoplayButtonClick() {
+    this.isAutoPlaying = !this.isAutoPlaying;
+    this.updateAutoPlayButtonText();
+
+    if (this.isAutoPlaying) {
+      this.startAutoPlay();
+    } else {
+      this.stopAutoPlay();
+    }
+  }
+
+  private handleMouseEnter() {
+    this.wasAutoPlayingBeforeMouseEnter = this.isAutoPlaying;
+    this.stopAutoPlay();
+  }
+
+  private handleMouseLeave() {
+    if (this.wasAutoPlayingBeforeMouseEnter) [this.startAutoPlay()];
   }
 }
 

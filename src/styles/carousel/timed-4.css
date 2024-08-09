@@ -4,6 +4,7 @@ body {
   min-height: 100dvh;
   margin: 0;
   padding: 0;
+  font-size: 100%;
 }
 body {
   display: grid;
@@ -55,6 +56,25 @@ button {
   justify-content: end;
   align-items: center;
   gap: 0.5rem;
+}
+
+.carousel-autoplay-and-dots-wrapper {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 1rem;
+}
+
+.carousel-autoplay-button {
+  border-radius: 0.25rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+.autoplay-text {
+  display: none;
+}
+.autoplay-text.visible {
+  display: block;
 }
 
 .carousel-dots {
