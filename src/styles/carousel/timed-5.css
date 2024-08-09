@@ -47,7 +47,8 @@ button {
 
 .carousel-navigation-wrapper,
 .carousel-nav-buttons-wrapper,
-.carousel-dots {
+.carousel-dots,
+.carousel-progress-buttons-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -55,12 +56,16 @@ button {
 .carousel-nav-buttons-wrapper {
   gap: 0.5rem;
 }
-.carousel-button {
+.carousel-button,
+.autoplay-button {
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.15);
   padding: 0.25rem;
 }
 
+.carousel-progress-buttons-wrapper {
+  gap: 0.75rem;
+}
 .carousel-dots {
   gap: 0.25rem;
 }

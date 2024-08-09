@@ -6,6 +6,9 @@ export class Carousel {
   private currentIndex = 0;
   private slides: HTMLElement[];
   private dots!: HTMLElement[];
+  private autoPlayButton: HTMLElement;
+  private isAutoPlaying = true;
+  private autoPlayTimer: ReturnType<typeof setInterval> | null = null;
 
   constructor(container: HTMLElement) {
     this.container = container;
@@ -19,6 +22,9 @@ export class Carousel {
     this.slides = Array.from(
       this.container.querySelectorAll(".carousel-slide")
     ) as HTMLElement[];
+    this.autoPlayButton = this.container.querySelector(
+      ".autoplay-button"
+    ) as HTMLElement;
 
     this.init();
 
@@ -27,7 +33,9 @@ export class Carousel {
 
   private init() {
     this.createNavDotsMarkup();
-    this.addNavButtonsEventListeners();
+    this.updateAutoplayButtonText();
+    this.startAutoPlay();
+    this.addEventListeners();
   }
 
   private createNavDotsMarkup() {
@@ -47,6 +55,14 @@ export class Carousel {
     dotsWrapper.appendChild(dotsFragment);
     this.dots = Array.from(dotsWrapper.children) as HTMLElement[];
     this.updateActiveDot();
+  }
+
+  private addEventListeners() {
+    this.addNavButtonsEventListeners();
+    this.autoPlayButton.addEventListener(
+      "click",
+      this.handleAutoplayButtonClick.bind(this)
+    );
   }
 
   private addNavButtonsEventListeners() {
@@ -88,6 +104,37 @@ export class Carousel {
     this.dots.forEach((el, index) => {
       el.classList.toggle("active", index === this.currentIndex);
     });
+  }
+
+  private startAutoPlay() {
+    if (this.isAutoPlaying) {
+      this.stopAutoPlay();
+      this.autoPlayTimer = setInterval(() => {
+        this.goToNext();
+      }, 2000);
+    }
+  }
+
+  private stopAutoPlay() {
+    if (this.autoPlayTimer) {
+      clearInterval(this.autoPlayTimer);
+      this.autoPlayTimer = null;
+    }
+  }
+
+  private updateAutoplayButtonText() {
+    this.autoPlayButton.textContent = this.isAutoPlaying ? "Pause" : "Play";
+  }
+
+  private handleAutoplayButtonClick() {
+    this.isAutoPlaying = !this.isAutoPlaying;
+    this.updateAutoplayButtonText();
+
+    if (this.isAutoPlaying) {
+      this.startAutoPlay();
+    } else {
+      this.stopAutoPlay();
+    }
   }
 }
 
