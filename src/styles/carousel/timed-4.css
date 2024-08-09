@@ -21,6 +21,8 @@ body {
 
 .carousel {
   display: flex;
+  transition: transform ease-in-out 600ms;
+  transform-origin: left;
 }
 
 .carousel-slide {
