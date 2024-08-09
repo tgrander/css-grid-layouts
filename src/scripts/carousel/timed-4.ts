@@ -36,18 +36,32 @@ export class Carousel {
     // if new index >= carousel items.length -> new index = 0
     // update this.currentIndex
     // transition to the next slide
-    console.log("goToNext was called");
     const nextIndex =
       this.currentIndex >= this.slides.length - 1 ? 0 : this.currentIndex + 1;
-    console.log("nextIndex :>> ", nextIndex);
-    this.currentIndex = nextIndex;
-    this.goToSlide(this.currentIndex);
+    this.goToSlide(nextIndex);
   }
 
-  private goToPrev() {}
+  private goToPrev() {
+    const nextIndex =
+      this.currentIndex === 0 ? this.slides.length - 1 : this.currentIndex - 1;
+    this.goToSlide(nextIndex);
+  }
 
   private goToSlide(index: number) {
-    this.carousel.style.transform = `translate(-${100 * index}%)`;
+    if (
+      this.currentIndex === index ||
+      index < 0 ||
+      index >= this.slides.length
+    ) {
+      return;
+    }
+    // negative value = move carousel left (next), positive value = move right (prev)
+    const transitionDirection = index > this.currentIndex ? -1 : 1;
+
+    this.currentIndex = index;
+    this.carousel.style.transform = `translate(${
+      100 * index * transitionDirection
+    }%)`;
   }
 }
 
