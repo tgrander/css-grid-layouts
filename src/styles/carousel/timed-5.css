@@ -60,3 +60,19 @@ button {
   border: 1px solid rgba(0, 0, 0, 0.15);
   padding: 0.25rem;
 }
+
+.carousel-dots {
+  gap: 0.25rem;
+}
+.carousel-dot {
+  height: 12px;
+  width: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+}
+.carousel-dot:not(.active):hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+.carousel-dot.active {
+  background-color: rgba(0, 0, 0, 0.4);
+}

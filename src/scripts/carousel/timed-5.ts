@@ -5,6 +5,7 @@ export class Carousel {
   private navPrevButton: HTMLElement;
   private currentIndex = 0;
   private slides: HTMLElement[];
+  private dots!: HTMLElement[];
 
   constructor(container: HTMLElement) {
     this.container = container;
@@ -25,7 +26,27 @@ export class Carousel {
   }
 
   private init() {
+    this.createNavDotsMarkup();
     this.addNavButtonsEventListeners();
+  }
+
+  private createNavDotsMarkup() {
+    const dotsWrapper = this.container.querySelector(
+      ".carousel-dots"
+    ) as HTMLElement;
+    const dotsFragment = document.createDocumentFragment();
+
+    this.slides.forEach((_, index) => {
+      const dot = document.createElement("button");
+      dot.className = "carousel-dot";
+
+      dot.addEventListener("click", () => this.goToSlide(index));
+      dotsFragment.appendChild(dot);
+    });
+
+    dotsWrapper.appendChild(dotsFragment);
+    this.dots = Array.from(dotsWrapper.children) as HTMLElement[];
+    this.updateActiveDot();
   }
 
   private addNavButtonsEventListeners() {
@@ -60,6 +81,13 @@ export class Carousel {
     this.carousel.style.transform = `translateX(-${normalizedIndex * 100}%)`;
 
     this.currentIndex = normalizedIndex;
+    this.updateActiveDot();
+  }
+
+  private updateActiveDot() {
+    this.dots.forEach((el, index) => {
+      el.classList.toggle("active", index === this.currentIndex);
+    });
   }
 }
 
