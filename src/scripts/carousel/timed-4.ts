@@ -6,6 +6,8 @@ export class Carousel {
   private slides: HTMLElement[];
   private navDots!: HTMLElement[];
   private currentIndex = 0;
+  private autoplay = true;
+  private autoplayTimer: ReturnType<typeof setInterval> | null = null;
 
   constructor(container: HTMLElement) {
     this.container = container;
@@ -26,8 +28,8 @@ export class Carousel {
   private init() {
     this.navDots = this.createDotsMarkup();
     this.updateActiveDot();
-
-    this.addNavButtonsEventListeners();
+    this.startAutoPlay();
+    this.addEventListeners();
   }
 
   private createDotsMarkup(): HTMLElement[] {
@@ -47,6 +49,18 @@ export class Carousel {
     dotsWrapper.appendChild(navDotsFragment);
 
     return Array.from(dotsWrapper.children) as HTMLElement[];
+  }
+
+  private addEventListeners() {
+    this.createCarouselEventListeners();
+    this.addNavButtonsEventListeners();
+  }
+
+  private createCarouselEventListeners() {
+    // On mouse enter, stop auto play
+    // On mouse leave, start auto play
+    this.carousel.addEventListener("mouseenter", this.stopAutoPlay.bind(this));
+    this.carousel.addEventListener("mouseleave", this.startAutoPlay.bind(this));
   }
 
   private addNavButtonsEventListeners(): void {
@@ -90,6 +104,24 @@ export class Carousel {
     this.navDots.forEach((el, index) => {
       el.classList.toggle("active", index === this.currentIndex);
     });
+  }
+
+  private startAutoPlay() {
+    // On initial load,
+    // If autoplay == true, set an interval that transitions to next slide every X ms
+    if (this.autoplay) {
+      this.stopAutoPlay();
+
+      this.autoplayTimer = setInterval(() => {
+        this.goToNext();
+      }, 2000);
+    }
+  }
+
+  private stopAutoPlay() {
+    if (this.autoplayTimer) {
+      clearInterval(this.autoplayTimer);
+    }
   }
 }
 
