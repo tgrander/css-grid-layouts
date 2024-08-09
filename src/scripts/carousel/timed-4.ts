@@ -23,7 +23,25 @@ export class Carousel {
   }
 
   private init() {
+    this.createDotsMarkup();
     this.addNavButtonsEventListeners();
+  }
+
+  private createDotsMarkup() {
+    const dotsWrapper = this.container.querySelector(
+      ".carousel-dots"
+    ) as HTMLElement;
+    const navDotsFragment = document.createDocumentFragment();
+
+    this.slides.forEach((_, index) => {
+      const dot = document.createElement("button");
+      dot.className = "carousel-dot";
+      dot.addEventListener("click", () => this.handleNavDotClick(index));
+
+      navDotsFragment.appendChild(dot);
+    });
+
+    dotsWrapper.appendChild(navDotsFragment);
   }
 
   private addNavButtonsEventListeners(): void {
@@ -61,6 +79,8 @@ export class Carousel {
     this.currentIndex = index;
     this.carousel.style.transform = `translate(-${100 * normalizedIndex}%)`;
   }
+
+  private handleNavDotClick(index: number) {}
 }
 
 document.addEventListener("DOMContentLoaded", () => {
