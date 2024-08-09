@@ -1,3 +1,5 @@
+import { throttle } from "@utils/throttle";
+
 type CarouselDirection = "prev" | "next";
 
 interface CarouselItem {
@@ -176,6 +178,7 @@ export class CarouselController {
   private view: CarouselView;
 
   private autoplayTimer: ReturnType<typeof setInterval> | null = null;
+  private isMobile = false;
 
   constructor(container: HTMLElement, config: CarouselConfig) {
     this.container = container;
@@ -193,6 +196,7 @@ export class CarouselController {
 
   private init() {
     this.addEventListeners();
+    this.handleResize();
     this.initAutoPlay();
   }
 
@@ -201,6 +205,10 @@ export class CarouselController {
     this.view.onIndicatorDotClick(this.handleIndicatorDotClick.bind(this));
     this.view.onPauseButtonClick(this.handlePauseButtonClick.bind(this));
     this.view.onPlayButtonClick(this.playAutoPlay.bind(this));
+    window.addEventListener(
+      "resize",
+      throttle(this.handleResize.bind(this), 150)
+    );
   }
 
   private handleNavButtonClick(direction: CarouselDirection) {
@@ -218,6 +226,10 @@ export class CarouselController {
   }
 
   private playAutoPlay() {
+    if (this.isMobile) {
+      return;
+    }
+
     this.clearAutoPlayTimer();
 
     this.autoplayTimer = setInterval(() => {
@@ -246,6 +258,28 @@ export class CarouselController {
     if (this.model.get("autoplay") === true) {
       this.playAutoPlay();
     }
+  }
+
+  private handleResize() {
+    const isMobile = this.container.offsetWidth <= 400;
+    if (isMobile) {
+      this.initMobileView();
+    } else {
+      this.initDesktopView();
+    }
+  }
+
+  private initMobileView() {
+    this.isMobile = true;
+    this.clearAutoPlayTimer();
+    this.view.goToSlide(0); // Reset to first slide
+    // Additional mobile-specific logic
+  }
+
+  private initDesktopView() {
+    // Restore desktop behavior
+    this.isMobile = false;
+    this.initAutoPlay();
   }
 }
 
